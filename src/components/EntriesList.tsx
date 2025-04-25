@@ -25,20 +25,20 @@ const EntriesList = () => {
   });
 
   const handleRecord = async () => {
-    // Stub for voice recording functionality
     console.log("Initiating voice recording...");
-    // await callFirebaseFunction("transcribe");
-    // await callFirebaseFunction("enrich");
   };
 
   return (
-    <div className="relative min-h-screen bg-secondary/20 p-4">
+    <div className="relative min-h-screen bg-primary p-4">
       <div className="grid gap-4">
         {entries.map((entry) => (
-          <Card key={entry.id} className="bg-white/80 backdrop-blur">
+          <Card 
+            key={entry.id} 
+            className="bg-secondary/20 border-primary/20"
+          >
             <CardContent className="p-4">
-              <p className="text-primary">{entry.content.slice(0, 40)}...</p>
-              <p className="mt-2 text-sm text-primary/60">
+              <p className="text-primary-foreground">{entry.content.slice(0, 40)}...</p>
+              <p className="mt-2 text-sm text-primary-foreground/60">
                 {formatDistanceToNow(new Date(entry.created_at), { addSuffix: true })}
               </p>
             </CardContent>
@@ -51,7 +51,7 @@ const EntriesList = () => {
         className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-accent hover:bg-accent/90"
         onClick={handleRecord}
       >
-        <Mic className="h-6 w-6 text-white" />
+        <Mic className="h-6 w-6 text-primary" />
       </Button>
     </div>
   );
