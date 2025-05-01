@@ -3,14 +3,16 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const NewEntry = () => {
   const [content, setContent] = useState("");
   const navigate = useNavigate();
 
   const handleSave = async () => {
-    // Stub for saving entry
+    // Mock saving entry
     console.log("Saving entry:", content);
+    toast.success("Entry saved successfully!");
     navigate("/entries");
   };
 
