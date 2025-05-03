@@ -14,7 +14,8 @@ The Mindful Inkwell Journal is designed to make journaling accessible, enjoyable
 ## How It Should Work
 
 - Users can create journal entries via text or voice.
-- Voice entries are transcribed automatically using AI.
+- Simulated voice entries can be created using the microphone button in the entries list; these are saved to Firestore and persist after refresh, just like manual entries.
+- Voice entries will be transcribed automatically using AI in a future phase.
 - After saving an entry, the AI generates a poem based on the content, displayed alongside the entry.
 - Entries are organized in collapsible cards, each showing the original entry, AI poem, and timestamp.
 - The interface is responsive, visually appealing, and easy to navigate, with floating action buttons for quick entry creation.
@@ -23,7 +24,7 @@ The Mindful Inkwell Journal is designed to make journaling accessible, enjoyable
 
 - **Simplicity:** Minimalist, intuitive UI that encourages frequent use.
 - **Creativity:** AI features that add value and delight, such as poetry generation and entry polishing.
-- **Accessibility:** Support for both text and voice input, responsive design for all devices.
+- **Accessibility:** Support for both text and voice input, with simulated voice entries now persisting like manual entries; responsive design for all devices.
 - **Feedback:** Real-time notifications and visual cues for actions like saving, recording, and errors.
 - **Security:** User authentication via Google Sign-In to protect privacy and data.
 

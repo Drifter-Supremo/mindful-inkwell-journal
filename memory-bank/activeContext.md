@@ -2,9 +2,10 @@
 
 ## Current Work Focus
 
-- Firebase Authentication (Google sign-in) is now fully integrated.
+- Firebase Authentication (Google sign-in) is fully integrated.
 - All Supabase authentication code and configuration have been removed.
-- Firestore data functions and UI integration for journal entries are complete and now securely scoped to the authenticated user.
+- Firestore data functions and UI integration for journal entries are complete and securely scoped to the authenticated user.
+- Simulated voice journal entries (via the microphone button in EntriesList) are now saved to Firestore and persist after refresh, matching manual entry persistence.
 - Documentation and checklist are kept up to date as development continues.
 
 ## Recent Changes
@@ -17,13 +18,13 @@
 - Updated `getEntries` to filter by userId.
 - Added a "Log Out" button to the FilterDrawer with improved styling for visibility.
 - Moved toast notifications to the top-right corner to prevent overlap with UI controls.
-- Placeholder voice notes are not persisted and will disappear on reload (expected until voice-to-text is implemented).
+- Simulated voice journal entries (created via the microphone button in EntriesList) are now saved to Firestore and persist after refresh, just like manual entries.
 - All authentication and UI/UX issues resolved.
 - Marked all Phase 3 authentication tasks as complete in tasks.md.
 
 ## Next Steps
 
-- Begin Phase 4: implement voice recording with RecordRTC.
+- Integrate real voice-to-text transcription using OpenAI (Phase 5).
 - Continue updating documentation as new features are developed or changes occur.
 
 ## Active Decisions and Considerations

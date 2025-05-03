@@ -15,7 +15,7 @@ The Mindful Inkwell Journal is a web-based app that makes journaling simple and 
 
 ### **🏗️ Architecture**
 The app revolves around two core pages:  
-- **Entries List (`/entries`)**: Shows all your journal entries in neat collapsible cards—each with the entry, an AI poem, and a timestamp. Plus, floating buttons to start a new text or voice entry.  
+- **Entries List (`/entries`)**: Shows all your journal entries in neat collapsible cards—each with the entry, an AI poem, and a timestamp. Plus, floating buttons to start a new text or simulated voice entry (the microphone button now saves a simulated voice entry to Firestore, persisting like manual entries).  
 - **New Entry (`/new`)**: A full-screen spot to write or record new entries, with a toggle for voice mode and visual cues while recording.  
 
 Key pieces:  
@@ -24,6 +24,8 @@ Key pieces:
 - **NewEntry.tsx**: Manages both text and voice inputs, tying into recording and AI features.  
 
 State’s kept simple with React’s `useState` hooks for now—might level up later if needed.
+
+Simulated voice entries are now supported and persist after refresh, matching manual entries. Real voice-to-text transcription will be integrated in a future phase.
 
 ---
 
@@ -54,6 +56,7 @@ We’re tapping OpenAI for two big wins:
 - Sonner handles toast notifications for slick feedback.  
 - Animations add a little flair to the UX.  
 - Everything’s responsive—looks great on any screen.  
+- Simulated voice entries (created via the microphone button in EntriesList) are now saved to Firestore and persist after refresh, matching manual entries.
 - Keep API keys safe in environment variables, not the repo!  
 - Hosted on GitHub Pages to start, with Vercel on deck for future upgrades.
 

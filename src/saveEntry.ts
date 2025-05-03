@@ -9,7 +9,11 @@ import { collection, addDoc } from 'firebase/firestore';
  * @param poem - The AI-generated poem.
  * @param userId - The authenticated user's ID.
  */
-export async function saveEntry(content: string, poem: string, userId: string) {
+export async function saveEntry(
+  content: string,
+  poem: string,
+  userId: string
+) {
   const entry = {
     content,
     poem,

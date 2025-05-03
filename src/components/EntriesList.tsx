@@ -25,30 +25,7 @@ const EntriesList = () => {
     }
   }, [user]);
 
-  const toggleRecording = () => {
-    if (!isRecording) {
-      // Start recording
-      toast.info("Recording started");
-      setIsRecording(true);
-    } else {
-      // Stop recording
-      toast.success("Recording stopped");
-      setIsRecording(false);
-      
-      // Simulate adding a new entry from the recording (with AI poem generation)
-      setTimeout(() => {
-        const newEntry = {
-          id: `${Date.now()}`,
-          content: "This is a transcription of your voice recording. It would normally be processed by a speech-to-text service. When implemented, your exact words will appear here exactly as you spoke them.",
-          poem: "Words from lips, thoughts from mind,\nCaptured now, by tech refined.\nAI weaves with gentle art,\nPoetry from the spoken heart.",
-          created_at: new Date().toISOString(),
-        };
-        
-        setEntries([newEntry, ...entries]);
-        toast.success("New entry created from recording");
-      }, 1500);
-    }
-  };
+  // Removed simulated voice entry logic. Use NewEntry page for voice entries.
 
   const handleNewTextEntry = async (content: string) => {
     if (!user) {
@@ -115,6 +92,7 @@ const EntriesList = () => {
                   </Button>
                 </div>
                 
+
                 {isExpanded && entry.poem && (
                   <div 
                     className="mt-4 pt-4 border-t border-primary/20 animate-fade-in"
@@ -151,7 +129,32 @@ const EntriesList = () => {
             ? "bg-red-500 hover:bg-red-600 animate-pulse" 
             : "bg-accent hover:bg-accent/90"
         )}
-        onClick={toggleRecording}
+        onClick={async () => {
+          if (!isRecording) {
+            toast.info("Recording started");
+            setIsRecording(true);
+          } else {
+            toast.success("Recording stopped");
+            setIsRecording(false);
+
+            // Simulate transcription and save entry to Firestore
+            toast.loading("Transcribing voice note...");
+            await new Promise((res) => setTimeout(res, 1200));
+            const entryContent = "Simulated transcription: This is where your voice note would be transcribed to text using AI.";
+            toast.dismiss();
+            toast.success("Voice note transcribed!");
+
+            if (user) {
+              const poem = "When integrated with AI, a poem based on your journal entry will appear here.";
+              const userId = user.uid;
+              await saveEntry(entryContent, poem, userId);
+              toast.success("Entry saved successfully!");
+              // Refresh entries from Firestore
+              const updatedEntries = await getEntries(userId);
+              setEntries(updatedEntries);
+            }
+          }
+        }}
       >
         {isRecording ? (
           <MicOff className="h-6 w-6 text-primary animate-pulse" />

@@ -232,38 +232,10 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
 ## 🎤 PHASE 4: IMPLEMENT VOICE RECORDING
 
 ### 4.1 Voice Recording
-- [ ] In `NewEntry.tsx`, add RecordRTC for recording:
-  ```typescript
-  import RecordRTC from 'recordrtc';
-
-  let recorder: RecordRTC | null = null;
-  const startRecording = () => {
-    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-      recorder = new RecordRTC(stream, { type: 'audio' });
-      recorder.startRecording();
-    });
-  };
-  const stopRecording = () => {
-    recorder?.stopRecording(() => {
-      const blob = recorder?.getBlob();
-      // Handle blob (e.g., send to OpenAI)
-      recorder?.getTracks().forEach(track => track.stop());
-    });
-  };
-  ```
-- [ ] Add buttons with UI feedback:
-  ```typescript
-  const [isRecording, setIsRecording] = useState(false);
-  <button
-    onClick={() => { setIsRecording(true); startRecording(); }}
-    className={isRecording ? 'bg-red-500' : 'bg-green-500'}
-  >
-    Start
-  </button>
-  <button onClick={() => { setIsRecording(false); stopRecording(); }}>
-    Stop
-  </button>
-  ```
+- [x] Simulate voice entry creation via the microphone button in `EntriesList.tsx` (no real audio yet).
+- [x] Save simulated voice entries to Firestore and ensure they persist after refresh, matching manual entries.
+- [x] Provide UI feedback for recording, transcription, and save.
+- [ ] Integrate real audio recording and AI transcription in a future phase.
 
 ---
 

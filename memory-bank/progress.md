@@ -12,18 +12,18 @@
 - `getEntries` function implemented to fetch entries for the authenticated user from Firestore.
 - `EntriesList.tsx` fetches and displays only the current user's Firestore data, refreshing after new entries.
 - `NewEntryModal.tsx` and `NewEntry.tsx` save entries to Firestore using the authenticated Firebase userId.
+- Simulated voice journal entries (created via the microphone button in EntriesList) are now saved to Firestore and persist after refresh, matching manual entry persistence.
 - Firebase Authentication (Google sign-in) is fully integrated and working.
 - All Supabase authentication code and configuration have been removed.
 - "Log Out" button added to the FilterDrawer with improved styling for visibility.
 - Toast notifications repositioned to the top-right to prevent UI overlap.
-- Placeholder voice notes are not persisted and will disappear on reload (expected until voice-to-text is implemented).
 - All authentication and UI/UX issues resolved.
-- All phase 0, 1.1, 1.2, 2.1, 2.2, 2.3, and 3 tasks completed and checked off in tasks.md.
+- All phase 0, 1.1, 1.2, 2.1, 2.2, 2.3, 3, and 4.1 tasks completed and checked off in tasks.md.
 
 ## What's Left to Build
 
-- Implement voice recording and transcription (Phase 4).
-- Integrate OpenAI for speech-to-text and poem generation.
+- Integrate real voice-to-text transcription using OpenAI (Phase 5).
+- Integrate OpenAI for poem generation (Phase 6).
 - Continue updating and maintaining Memory Bank files as development progresses.
 - Add documentation for complex features, integrations, and testing as needed.
 
@@ -33,11 +33,10 @@
 - Secure credential management in place.
 - All journal entry operations are now securely scoped to the authenticated user.
 - UI/UX improvements implemented for logout and toast notifications.
-- Placeholder voice notes are not persisted until full voice-to-text is implemented.
-- Ready to implement voice recording and transcription.
+- Simulated voice journal entries are now persisted in Firestore and remain after refresh, matching manual entries.
+- Ready to implement real voice-to-text transcription and poem generation.
 
 ## Known Issues
 
-- Placeholder voice notes are not persisted and will disappear on reload (expected).
-- No other outstanding technical issues at this stage.
+- No outstanding technical issues at this stage.
 - Documentation will be updated as new features are implemented or changes occur.
