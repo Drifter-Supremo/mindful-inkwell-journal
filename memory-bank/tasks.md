@@ -235,7 +235,7 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
 - [x] Simulate voice entry creation via the microphone button in `EntriesList.tsx` (no real audio yet).
 - [x] Save simulated voice entries to Firestore and ensure they persist after refresh, matching manual entries.
 - [x] Provide UI feedback for recording, transcription, and save.
-- [x] Integrate real voice-to-text transcription using OpenAI (Phase 5). (Live and tested!)
+- [x] Integrate real voice-to-text transcription using OpenAI (Live and tested!)
 
 ---
 
@@ -243,7 +243,6 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
 
 ### 5.1 Transcription
 - [x] Send audio blob to OpenAI in `NewEntry.tsx`:
-- [ ] Send audio blob to OpenAI in `NewEntry.tsx`:
   ```typescript
   import { Configuration, OpenAIApi } from 'openai';
   import { openaiApiKey } from '../config';
@@ -265,7 +264,7 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
     });
   };
   ```
-- [ ] Add a loading state:
+- [x] Add a loading state:
   ```typescript
   const [isLoading, setIsLoading] = useState(false);
   const stopRecording = async () => {
@@ -339,7 +338,7 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
 ### 8.1 Test Features
 - [ ] Test manual text entry creation and display.
 - [ ] Test voice recording and transcription.
-- [ ] Test poem generation and display.
+- [x] Integrate DeepSeek API for poetry generation and display.
 - [ ] Verify Google Sign-In and data security.
 - [ ] Check deployed site functionality.
 

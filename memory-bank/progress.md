@@ -1,7 +1,12 @@
 # Progress
 
-## What Works
+## Completed
 
+- DeepSeek poetry generation fully integrated
+  - Secure backend API endpoint via Express
+  - Vite proxy setup for local development
+  - Error handling on both frontend and backend
+  - System prompts ensure non-rhyming, reflective poetry
 - All core Memory Bank files are created and up to date.
 - Project cloned, dependencies installed, and Vite + React setup verified.
 - `.env` created for Firebase and OpenAI keys; `.gitignore` updated to exclude `.env`.
@@ -20,12 +25,11 @@
 - All authentication and UI/UX issues resolved.
 - All phase 0, 1.1, 1.2, 2.1, 2.2, 2.3, 3, and 4.1 tasks completed and checked off in tasks.md.
 
-## What's Left to Build
+## Next Steps
 
-- Integrate OpenAI for poem generation (Phase 6).
-- Integrate OpenAI for poem generation (Phase 6).
-- Continue updating and maintaining Memory Bank files as development progresses.
-- Add documentation for complex features, integrations, and testing as needed.
+- Comprehensive testing of poetry generation feature
+- Verify error cases (network failures, API limits)
+- Collect sample outputs for quality review
 
 ## Current Status
 

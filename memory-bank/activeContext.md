@@ -21,11 +21,13 @@
 - Real voice-to-text transcription is now live: voice notes are transcribed using OpenAI, saved to Firestore, and persist after refresh, just like manual entries.
 - All authentication and UI/UX issues resolved.
 - Marked all Phase 3 authentication tasks as complete in tasks.md.
+- DeepSeek poetry generation live (backend API, Vite proxy, error handling)
 
 ## Next Steps
 
 - Continue testing and refining the OpenAI voice-to-text transcription integration as needed.
 - Continue updating documentation as new features are developed or changes occur.
+- Testing and quality review of DeepSeek poetry generation.
 
 ## Active Decisions and Considerations
 

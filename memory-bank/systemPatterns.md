@@ -7,6 +7,13 @@
 - **AI Services:** OpenAI GPT-4o-mini for speech-to-text (real voice-to-text transcription now live), GPT-4.1-mini for entry enhancement and poetry generation.
 - **Voice Recording:** RecordRTC for capturing audio, integrated with OpenAI transcription. Voice entries (via the microphone button in EntriesList) are now transcribed, saved to Firestore, and behave like manual entries.
 
+## Secure AI API Integration
+
+- All sensitive AI API calls (DeepSeek) are handled server-side via Express backend
+- Vite proxy is used for seamless local development
+- Robust error handling on both frontend and backend
+- System prompt ensures non-rhyming, reflective poetry
+
 ## Key Technical Decisions
 
 - **Simple State Management:** Uses React's `useState` for local state; may consider more advanced solutions as complexity grows.

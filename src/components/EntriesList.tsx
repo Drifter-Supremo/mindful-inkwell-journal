@@ -9,6 +9,7 @@ import NewEntryModal from "./NewEntryModal";
 
 import { getEntries } from "../getEntries";
 import { saveEntry } from "../saveEntry";
+import { generatePoem } from "../generatePoem";
 import { useAuth } from "@/contexts/AuthContext";
 
 
@@ -41,8 +42,16 @@ const EntriesList = () => {
       toast.error("You must be signed in to save an entry.");
       return;
     }
-    // Placeholder for AI poem generation
-    const poem = "AI will analyze your entry,\nCrafting verses thoughtful and free.\nMirroring emotions you've expressed,\nIn poetic form, beautifully dressed.";
+    toast.loading("Gorlea is writing your poem...");
+    let poem = "";
+    try {
+      poem = await generatePoem(content); // Call generatePoem
+      toast.dismiss();
+      toast.success("Poem generated!");
+    } catch (err) {
+      toast.dismiss();
+      toast.error("Failed to generate poem. Saving entry without poem.");
+    }
     const userId = user.uid;
     await saveEntry(content, poem, userId);
     // Refresh entries from Firestore
@@ -218,7 +227,16 @@ const EntriesList = () => {
                 toast.dismiss();
                 toast.success("Voice note transcribed!");
                 if (user) {
-                  const poem = "When integrated with AI, a poem based on your journal entry will appear here.";
+                  toast.loading("Gorlea is writing your poem...");
+                  let poem = "";
+                  try {
+                    poem = await generatePoem(entryContent); // Call generatePoem
+                    toast.dismiss();
+                    toast.success("Poem generated!");
+                  } catch (err) {
+                    toast.dismiss();
+                    toast.error("Failed to generate poem. Saving entry without poem.");
+                  }
                   const userId = user.uid;
                   await saveEntry(entryContent, poem, userId);
                   toast.success("Entry saved successfully!");
