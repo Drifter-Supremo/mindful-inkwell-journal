@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
-import { Mic, MicOff, Plus, ChevronDown, ChevronUp } from "lucide-react";
+import { Mic, MicOff, Plus, ChevronDown, ChevronUp, Trash } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -10,9 +10,16 @@ import NewEntryModal from "./NewEntryModal";
 import { getEntries } from "../getEntries";
 import { saveEntry } from "../saveEntry";
 import { useAuth } from "@/contexts/AuthContext";
-import React, { useRef } from "react";
+
+
+import { deleteEntry } from "../deleteEntry";
+import DeleteEntryModal from "./DeleteEntryModal";
 
 const EntriesList = () => {
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [entryToDelete, setEntryToDelete] = useState<string | null>(null);
+  const [longPressTimeout, setLongPressTimeout] = useState<NodeJS.Timeout | null>(null);
+
   const [isRecording, setIsRecording] = useState(false);
   const [entries, setEntries] = useState<any[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -70,7 +77,34 @@ const EntriesList = () => {
           const contentPreview = entry.content.length > 100 && !isExpanded
             ? `${entry.content.substring(0, 100)}...`
             : entry.content;
-            
+          
+          // Desktop delete handler
+          const handleDelete = async (e: React.MouseEvent) => {
+            e.stopPropagation();
+            if (window.confirm("Are you sure you want to delete this entry? This cannot be undone.")) {
+              if (user) {
+                await deleteEntry(entry.id, user.uid);
+                toast.success("Entry deleted.");
+                const updatedEntries = await getEntries(user.uid);
+                setEntries(updatedEntries);
+              }
+            }
+          };
+
+          // Mobile long-press handlers
+          const handleLongPressStart = (e: React.TouchEvent) => {
+            if (window.innerWidth < 768) { // Tailwind 'md' breakpoint
+              setLongPressTimeout(setTimeout(() => {
+                setEntryToDelete(entry.id);
+                setDeleteModalOpen(true);
+              }, 600)); // 600ms for long press
+            }
+          };
+          const handleLongPressEnd = () => {
+            if (longPressTimeout) clearTimeout(longPressTimeout);
+          };
+
+          
           return (
             <Card 
               key={entry.id} 
@@ -78,6 +112,9 @@ const EntriesList = () => {
                 "bg-secondary/20 border-primary/20 transition-all duration-300",
                 isExpanded ? "shadow-md" : ""
               )}
+              onTouchStart={handleLongPressStart}
+              onTouchEnd={handleLongPressEnd}
+              onTouchMove={handleLongPressEnd}
             >
               <CardContent className="p-4">
                 <div 
@@ -92,21 +129,32 @@ const EntriesList = () => {
                       <span className="text-accent text-sm">Click to read more</span>
                     )}
                   </div>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="mt-1 h-6 w-6 p-0 text-primary-foreground/60 hover:text-primary-foreground hover:bg-transparent"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleExpandEntry(entry.id);
-                    }}
-                  >
-                    {isExpanded ? (
-                      <ChevronUp className="h-4 w-4" />
-                    ) : (
-                      <ChevronDown className="h-4 w-4" />
-                    )}
-                  </Button>
+                  <div className="flex flex-col items-end gap-2">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="mt-1 h-6 w-6 p-0 text-primary-foreground/60 hover:text-primary-foreground hover:bg-transparent"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleExpandEntry(entry.id);
+                      }}
+                    >
+                      {isExpanded ? (
+                        <ChevronUp className="h-4 w-4" />
+                      ) : (
+                        <ChevronDown className="h-4 w-4" />
+                      )}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      aria-label="Delete entry"
+                      className="h-6 w-6 p-0 text-destructive hover:text-destructive/80 hidden md:inline-flex"
+                      onClick={handleDelete}
+                    >
+                      <Trash className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
                 
 
@@ -196,6 +244,20 @@ const EntriesList = () => {
         open={modalOpen} 
         onOpenChange={setModalOpen} 
         onSave={handleNewTextEntry} 
+      />
+      {/* Delete Entry Modal for mobile long-press */}
+      <DeleteEntryModal
+        open={deleteModalOpen}
+        onCancel={() => setDeleteModalOpen(false)}
+        onConfirm={async () => {
+          if (entryToDelete && user) {
+            await deleteEntry(entryToDelete, user.uid);
+            toast.success("Entry deleted.");
+            const updatedEntries = await getEntries(user.uid);
+            setEntries(updatedEntries);
+          }
+          setDeleteModalOpen(false);
+        }}
       />
     </div>
   );
