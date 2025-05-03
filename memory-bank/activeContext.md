@@ -15,6 +15,10 @@
 - Updated `Auth.tsx` to use Google sign-in via Firebase.
 - Updated `EntriesList.tsx` and `NewEntry.tsx` to use the authenticated Firebase userId for all entry operations.
 - Updated `getEntries` to filter by userId.
+- Added a "Log Out" button to the FilterDrawer with improved styling for visibility.
+- Moved toast notifications to the top-right corner to prevent overlap with UI controls.
+- Placeholder voice notes are not persisted and will disappear on reload (expected until voice-to-text is implemented).
+- All authentication and UI/UX issues resolved.
 - Marked all Phase 3 authentication tasks as complete in tasks.md.
 
 ## Next Steps
@@ -27,4 +31,6 @@
 - All credentials are managed via environment variables and excluded from version control.
 - Firestore collections are created automatically on first write.
 - Firestore security rules will be updated to restrict access to authenticated users and their own entries.
+- Placeholder voice notes are not persisted until full voice-to-text and saving are implemented.
+- UI/UX improvements are prioritized for accessibility and usability.
 - Memory Bank documentation will be updated after each significant change or upon user request.

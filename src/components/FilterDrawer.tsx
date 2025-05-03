@@ -1,6 +1,7 @@
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "./ui/sheet";
 import { Button } from "./ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 
 type FilterDrawerProps = {
   open: boolean;
@@ -17,13 +18,20 @@ const FilterDrawer = ({ open, onOpenChange }: FilterDrawerProps) => {
     { name: "Personal", type: "tag" },
   ];
 
+  const { signOut } = useAuth();
+
+  const handleLogout = async () => {
+    await signOut();
+    onOpenChange(false);
+  };
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="left" className="w-[280px] bg-secondary">
+      <SheetContent side="left" className="w-[280px] bg-secondary flex flex-col h-full">
         <SheetHeader>
           <SheetTitle className="text-primary">Filters</SheetTitle>
         </SheetHeader>
-        <div className="mt-4 flex flex-col gap-2">
+        <div className="mt-4 flex flex-col gap-2 flex-1">
           {filters.map((filter) => (
             <Button
               key={filter.name}
@@ -34,6 +42,12 @@ const FilterDrawer = ({ open, onOpenChange }: FilterDrawerProps) => {
             </Button>
           ))}
         </div>
+        <Button
+          className="mt-auto mb-2 bg-destructive text-primary hover:bg-destructive/90"
+          onClick={handleLogout}
+        >
+          Log Out
+        </Button>
       </SheetContent>
     </Sheet>
   );

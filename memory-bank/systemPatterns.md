@@ -16,18 +16,22 @@
 - **Responsive Design:** Tailwind CSS ensures the UI adapts to all screen sizes.
 - **Authentication:** Google Sign-In via Firebase Auth for secure, user-friendly login. All authentication and user state is managed via Firebase; Supabase has been fully removed.
 - **User Data Scoping:** All Firestore entry operations (save, fetch) are scoped to the authenticated user's `uid`.
+- **Logout Accessibility:** A "Log Out" button is always available in the FilterDrawer for authenticated users.
+- **Toast Placement:** Toast notifications are positioned in the top-right to avoid UI overlap.
 
 ## Design Patterns
 
 - **Separation of Concerns:** UI, data handling, and AI integrations are separated into distinct components and modules.
 - **Integration Points:** Clear boundaries between frontend, backend, and AI services.
-- **Feedback Loops:** Real-time notifications and visual cues (Sonner) for user actions.
+- **Feedback Loops:** Real-time notifications and visual cues (Sonner) for user actions, always positioned for unobstructed access.
+- **Placeholder Handling:** Voice notes are currently placeholders and not persisted until full voice-to-text is implemented.
 
 ## Component Relationships
 
 - **EntriesList.tsx:** Displays all journal entries for the authenticated user, triggers new entry creation.
 - **NewEntryModal.tsx:** Handles text entry creation with validation and feedback.
-- **NewEntry.tsx:** Manages both text and voice input, integrates with AI for transcription and poetry.
+- **NewEntry.tsx:** Manages both text and voice input, integrates with AI for transcription and poetry. Voice notes are currently placeholders and not persisted.
+- **FilterDrawer.tsx:** Provides filter options and a persistent "Log Out" button for authenticated users.
 - **UI Components:** Shared components (from shadcn/ui) provide consistent styling and behavior across the app.
 
 ## Integration Overview

@@ -14,6 +14,10 @@
 - `NewEntryModal.tsx` and `NewEntry.tsx` save entries to Firestore using the authenticated Firebase userId.
 - Firebase Authentication (Google sign-in) is fully integrated and working.
 - All Supabase authentication code and configuration have been removed.
+- "Log Out" button added to the FilterDrawer with improved styling for visibility.
+- Toast notifications repositioned to the top-right to prevent UI overlap.
+- Placeholder voice notes are not persisted and will disappear on reload (expected until voice-to-text is implemented).
+- All authentication and UI/UX issues resolved.
 - All phase 0, 1.1, 1.2, 2.1, 2.2, 2.3, and 3 tasks completed and checked off in tasks.md.
 
 ## What's Left to Build
@@ -28,9 +32,12 @@
 - MVP setup, Firebase integration, authentication, and Firestore data functions/UI integration are complete.
 - Secure credential management in place.
 - All journal entry operations are now securely scoped to the authenticated user.
+- UI/UX improvements implemented for logout and toast notifications.
+- Placeholder voice notes are not persisted until full voice-to-text is implemented.
 - Ready to implement voice recording and transcription.
 
 ## Known Issues
 
-- No outstanding technical issues at this stage.
+- Placeholder voice notes are not persisted and will disappear on reload (expected).
+- No other outstanding technical issues at this stage.
 - Documentation will be updated as new features are implemented or changes occur.
