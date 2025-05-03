@@ -4,8 +4,8 @@
 
 - **Frontend:** Built with React (Vite, TypeScript, Tailwind CSS, shadcn/ui, Lucide React, React Router).
 - **Backend:** Firebase (Firestore for data storage, Firebase Auth for authentication; Supabase is no longer used).
-- **AI Services:** OpenAI GPT-4o-mini for speech-to-text, GPT-4.1-mini for entry enhancement and poetry generation.
-- **Voice Recording:** RecordRTC for capturing audio, integrated with AI transcription. Simulated voice entries (via the microphone button in EntriesList) are now persisted to Firestore and behave like manual entries.
+- **AI Services:** OpenAI GPT-4o-mini for speech-to-text (real voice-to-text transcription now live), GPT-4.1-mini for entry enhancement and poetry generation.
+- **Voice Recording:** RecordRTC for capturing audio, integrated with OpenAI transcription. Voice entries (via the microphone button in EntriesList) are now transcribed, saved to Firestore, and behave like manual entries.
 
 ## Key Technical Decisions
 
@@ -24,7 +24,7 @@
 - **Separation of Concerns:** UI, data handling, and AI integrations are separated into distinct components and modules.
 - **Integration Points:** Clear boundaries between frontend, backend, and AI services.
 - **Feedback Loops:** Real-time notifications and visual cues (Sonner) for user actions, always positioned for unobstructed access.
-- **Placeholder Handling:** Voice notes are currently simulated and, when created via the EntriesList microphone button, are persisted to Firestore and displayed like manual entries. Full voice-to-text and real audio handling will be implemented in future phases.
+- **Voice Note Handling:** Voice notes are now fully transcribed using OpenAI and saved to Firestore as real entries.
 
 ## Component Relationships
 

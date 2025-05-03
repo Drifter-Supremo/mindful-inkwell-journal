@@ -235,13 +235,14 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
 - [x] Simulate voice entry creation via the microphone button in `EntriesList.tsx` (no real audio yet).
 - [x] Save simulated voice entries to Firestore and ensure they persist after refresh, matching manual entries.
 - [x] Provide UI feedback for recording, transcription, and save.
-- [ ] Integrate real audio recording and AI transcription in a future phase.
+- [x] Integrate real voice-to-text transcription using OpenAI (Phase 5). (Live and tested!)
 
 ---
 
 ## 🗣️ PHASE 5: INTEGRATE OPENAI'S SPEECH-TO-TEXT
 
 ### 5.1 Transcription
+- [x] Send audio blob to OpenAI in `NewEntry.tsx`:
 - [ ] Send audio blob to OpenAI in `NewEntry.tsx`:
   ```typescript
   import { Configuration, OpenAIApi } from 'openai';

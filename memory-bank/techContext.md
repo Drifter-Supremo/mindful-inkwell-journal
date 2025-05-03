@@ -12,7 +12,7 @@
 - **Backend**
   - Firebase (Firestore, Firebase Auth; Supabase previously used for auth, now fully removed)
 - **AI Services**
-  - OpenAI GPT-4o-mini (speech-to-text)
+  - OpenAI GPT-4o-mini (real-time speech-to-text, fully integrated)
   - OpenAI GPT-4.1-mini (entry enhancement, poetry generation)
 - **Other Libraries**
   - RecordRTC (voice recording)
@@ -33,7 +33,7 @@
 - `src/config.ts` loads credentials from environment variables.
 - `src/saveEntry.ts` abstracts Firestore writes for journal entries.
 - `src/getEntries.ts` abstracts Firestore reads for fetching journal entries.
-- `EntriesList.tsx`, `NewEntryModal.tsx`, and `NewEntry.tsx` are integrated with Firestore for real data, always scoped to the authenticated user's `uid`.
+- `EntriesList.tsx`, `NewEntryModal.tsx`, and `NewEntry.tsx` are integrated with Firestore for real data, always scoped to the authenticated user's `uid`. Voice entries are now transcribed in real time using OpenAI and saved as text entries.
 - Hosted initially on GitHub Pages; Vercel planned for future deployment.
 
 ## Technical Constraints

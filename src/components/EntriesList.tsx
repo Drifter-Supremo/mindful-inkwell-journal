@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
@@ -11,6 +10,7 @@ import NewEntryModal from "./NewEntryModal";
 import { getEntries } from "../getEntries";
 import { saveEntry } from "../saveEntry";
 import { useAuth } from "@/contexts/AuthContext";
+import React, { useRef } from "react";
 
 const EntriesList = () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -18,6 +18,8 @@ const EntriesList = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [expandedEntryId, setExpandedEntryId] = useState<string | null>(null);
   const { user } = useAuth();
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
 
   useEffect(() => {
     if (user) {
@@ -43,6 +45,21 @@ const EntriesList = () => {
 
   const toggleExpandEntry = (id: string) => {
     setExpandedEntryId(expandedEntryId === id ? null : id);
+  };
+
+  // Transcribe audio blob using OpenAI Whisper
+  const transcribeAudio = async (blob: Blob): Promise<string> => {
+    const formData = new FormData();
+    formData.append('file', blob, 'recording.webm');
+    formData.append('model', 'gpt-4o-mini-transcribe');
+    formData.append('response_format', 'text');
+    const res = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}` },
+      body: formData
+    });
+    const text = await res.text();
+    return text;
   };
 
   return (
@@ -131,28 +148,40 @@ const EntriesList = () => {
         )}
         onClick={async () => {
           if (!isRecording) {
+            // Start recording
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const mr = new MediaRecorder(stream);
+            mediaRecorderRef.current = mr;
+            chunksRef.current = [];
+            mr.ondataavailable = (e) => chunksRef.current.push(e.data);
+            mr.start();
             toast.info("Recording started");
             setIsRecording(true);
           } else {
-            toast.success("Recording stopped");
+            // Stop and process recording
+            mediaRecorderRef.current?.stop();
             setIsRecording(false);
-
-            // Simulate transcription and save entry to Firestore
-            toast.loading("Transcribing voice note...");
-            await new Promise((res) => setTimeout(res, 1200));
-            const entryContent = "Simulated transcription: This is where your voice note would be transcribed to text using AI.";
-            toast.dismiss();
-            toast.success("Voice note transcribed!");
-
-            if (user) {
-              const poem = "When integrated with AI, a poem based on your journal entry will appear here.";
-              const userId = user.uid;
-              await saveEntry(entryContent, poem, userId);
-              toast.success("Entry saved successfully!");
-              // Refresh entries from Firestore
-              const updatedEntries = await getEntries(userId);
-              setEntries(updatedEntries);
-            }
+            toast.success("Recording stopped");
+            mediaRecorderRef.current!.onstop = async () => {
+              toast.loading("Transcribing voice note...");
+              const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
+              try {
+                const entryContent = await transcribeAudio(blob);
+                toast.dismiss();
+                toast.success("Voice note transcribed!");
+                if (user) {
+                  const poem = "When integrated with AI, a poem based on your journal entry will appear here.";
+                  const userId = user.uid;
+                  await saveEntry(entryContent, poem, userId);
+                  toast.success("Entry saved successfully!");
+                  const updatedEntries = await getEntries(userId);
+                  setEntries(updatedEntries);
+                }
+              } catch (err) {
+                toast.dismiss();
+                toast.error("Transcription failed");
+              }
+            };
           }
         }}
       >

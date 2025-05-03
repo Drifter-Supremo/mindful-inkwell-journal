@@ -12,7 +12,7 @@
 - `getEntries` function implemented to fetch entries for the authenticated user from Firestore.
 - `EntriesList.tsx` fetches and displays only the current user's Firestore data, refreshing after new entries.
 - `NewEntryModal.tsx` and `NewEntry.tsx` save entries to Firestore using the authenticated Firebase userId.
-- Simulated voice journal entries (created via the microphone button in EntriesList) are now saved to Firestore and persist after refresh, matching manual entry persistence.
+- Real voice-to-text journal entries (created via the microphone button in EntriesList) are now transcribed using OpenAI, saved to Firestore, and persist after refresh, matching manual entry persistence.
 - Firebase Authentication (Google sign-in) is fully integrated and working.
 - All Supabase authentication code and configuration have been removed.
 - "Log Out" button added to the FilterDrawer with improved styling for visibility.
@@ -22,7 +22,7 @@
 
 ## What's Left to Build
 
-- Integrate real voice-to-text transcription using OpenAI (Phase 5).
+- Integrate OpenAI for poem generation (Phase 6).
 - Integrate OpenAI for poem generation (Phase 6).
 - Continue updating and maintaining Memory Bank files as development progresses.
 - Add documentation for complex features, integrations, and testing as needed.

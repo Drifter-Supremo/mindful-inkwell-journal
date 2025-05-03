@@ -6,14 +6,14 @@ The Mindful Inkwell Journal is designed to make journaling accessible, enjoyable
 
 ## Problems It Solves
 
-- **Barriers to Journaling:** Many users struggle with consistency or feel intimidated by blank pages. The app lowers these barriers by offering both text and voice input, making it easy to capture thoughts in any moment.
+- **Barriers to Journaling:** Many users struggle with consistency or feel intimidated by blank pages. The app lowers these barriers by offering both text and real voice input (with automatic transcription), making it easy to capture thoughts in any moment.
 - **Time Constraints:** Quick entry options and voice-to-text transcription allow users to journal even when short on time.
 - **Creative Expression:** AI-generated poetry and entry enhancement inspire users to reflect and express themselves more deeply.
-- **Accessibility:** Voice recording and transcription make journaling accessible to users who prefer speaking or have difficulty typing.
+- **Accessibility:** Voice recording and real-time transcription (powered by OpenAI) make journaling accessible to users who prefer speaking or have difficulty typing.
 
 ## How It Should Work
 
-- Users can create journal entries via text or voice.
+- Users can create journal entries via text or voice (with AI-powered transcription).
 - Simulated voice entries can be created using the microphone button in the entries list; these are saved to Firestore and persist after refresh, just like manual entries.
 - Voice entries will be transcribed automatically using AI in a future phase.
 - After saving an entry, the AI generates a poem based on the content, displayed alongside the entry.
