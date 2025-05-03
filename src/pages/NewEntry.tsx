@@ -7,21 +7,26 @@ import { toast } from "sonner";
 import { Mic, MicOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { saveEntry } from "../saveEntry";
+import { useAuth } from "@/contexts/AuthContext";
 
 const NewEntry = () => {
   const [content, setContent] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handleSave = async () => {
     if (!content.trim()) {
       toast.error("Please enter some content before saving");
       return;
     }
+    if (!user) {
+      toast.error("You must be signed in to save an entry.");
+      return;
+    }
     // Placeholder for AI poem generation
     const poem = "When integrated with AI, a poem based on your journal entry will appear here.";
-    // TODO: Replace with actual userId from auth when available
-    const userId = "demo-user";
+    const userId = user.uid;
     await saveEntry(content, poem, userId);
     toast.success("Entry saved successfully!");
     navigate("/entries");

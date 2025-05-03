@@ -156,11 +156,11 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
 ## 🔐 PHASE 3: FIREBASE AUTHENTICATION WITH GOOGLE SIGN-IN
 
 ### 3.1 Enable Authentication
-- [ ] In the Firebase Console, go to "Authentication" > "Sign-in method".
-- [ ] Enable "Google" as a sign-in provider and configure it (add your OAuth credentials if prompted).
+- [x] In the Firebase Console, go to "Authentication" > "Sign-in method".
+- [x] Enable "Google" as a sign-in provider and configure it (add your OAuth credentials if prompted).
 
 ### 3.2 Add Google Sign-In Button
-- [ ] Create or update a login component (e.g., `Login.tsx`):
+- [x] Create or update a login component (e.g., `Login.tsx`):
   ```typescript
   import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 
@@ -172,7 +172,7 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
 
   return <button onClick={handleLogin}>Sign in with Google</button>;
   ```
-- [ ] Add Firebase Auth initialization to `main.tsx`:
+- [x] Add Firebase Auth initialization to `main.tsx`:
   ```typescript
   import { getAuth } from 'firebase/auth';
 
@@ -180,7 +180,7 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
   ```
 
 ### 3.3 Handle User State
-- [ ] Add user state management in your app (e.g., in `App.tsx`):
+- [x] Add user state management in your app (e.g., in `App.tsx`):
   ```typescript
   import { onAuthStateChanged } from 'firebase/auth';
   import { auth } from './main';
@@ -190,7 +190,7 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
     onAuthStateChanged(auth, (user) => setUser(user));
   }, []);
   ```
-- [ ] Update `saveEntry` to include `userId`:
+- [x] Update `saveEntry` to include `userId`:
   ```typescript
   export async function saveEntry(content: string, poem: string, userId: string) {
     const entry = {
@@ -202,7 +202,7 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
     await addDoc(collection(db, 'entries'), entry);
   }
   ```
-- [ ] Filter entries by `userId` in `getEntries`:
+- [x] Filter entries by `userId` in `getEntries`:
   ```typescript
   import { query, where } from 'firebase/firestore';
 
@@ -214,7 +214,7 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
   ```
 
 ### 3.4 Secure Firestore Rules
-- [ ] Update Firestore security rules to restrict access:
+- [x] Update Firestore security rules to restrict access:
   ```javascript
   rules_version = '2';
   service cloud.firestore {
@@ -225,7 +225,7 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
     }
   }
   ```
-- [ ] Publish the updated rules in the Firebase Console.
+- [x] Publish the updated rules in the Firebase Console.
 
 ---
 

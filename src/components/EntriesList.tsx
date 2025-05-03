@@ -10,16 +10,20 @@ import NewEntryModal from "./NewEntryModal";
 
 import { getEntries } from "../getEntries";
 import { saveEntry } from "../saveEntry";
+import { useAuth } from "@/contexts/AuthContext";
 
 const EntriesList = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [entries, setEntries] = useState<any[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [expandedEntryId, setExpandedEntryId] = useState<string | null>(null);
+  const { user } = useAuth();
 
   useEffect(() => {
-    getEntries().then(setEntries);
-  }, []);
+    if (user) {
+      getEntries(user.uid).then(setEntries);
+    }
+  }, [user]);
 
   const toggleRecording = () => {
     if (!isRecording) {
@@ -47,13 +51,16 @@ const EntriesList = () => {
   };
 
   const handleNewTextEntry = async (content: string) => {
+    if (!user) {
+      toast.error("You must be signed in to save an entry.");
+      return;
+    }
     // Placeholder for AI poem generation
     const poem = "AI will analyze your entry,\nCrafting verses thoughtful and free.\nMirroring emotions you've expressed,\nIn poetic form, beautifully dressed.";
-    // TODO: Replace with actual userId from auth when available
-    const userId = "demo-user";
+    const userId = user.uid;
     await saveEntry(content, poem, userId);
     // Refresh entries from Firestore
-    const updatedEntries = await getEntries();
+    const updatedEntries = await getEntries(userId);
     setEntries(updatedEntries);
   };
 

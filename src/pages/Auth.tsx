@@ -1,33 +1,32 @@
+// src/pages/Auth.tsx
 
-import { useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "firebase/auth";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
+
+const provider = new GoogleAuthProvider();
 
 const Auth = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleAuth = async (action: "login" | "signup") => {
-    try {
-      setLoading(true);
-      const {
-        data: { session },
-        error,
-      } = action === "login"
-        ? await supabase.auth.signInWithPassword({ email, password })
-        : await supabase.auth.signUp({ email, password });
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        navigate("/entries");
+      }
+    });
+    return () => unsubscribe();
+  }, [navigate]);
 
-      if (error) throw error;
-      if (session) navigate("/entries");
+  const handleGoogleSignIn = async () => {
+    const auth = getAuth();
+    try {
+      await signInWithPopup(auth, provider);
+      // onAuthStateChanged will handle navigation
     } catch (error: any) {
-      toast.error(error.message);
-    } finally {
-      setLoading(false);
+      alert(error.message);
     }
   };
 
@@ -39,36 +38,12 @@ const Auth = () => {
           <p className="text-primary/60">Your private journaling space</p>
         </div>
         <div className="space-y-4">
-          <Input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="bg-secondary-foreground/10 text-primary-foreground"
-          />
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="bg-secondary-foreground/10 text-primary-foreground"
-          />
-          <div className="space-y-2">
-            <Button
-              className="w-full bg-accent text-primary-foreground hover:bg-accent/90"
-              onClick={() => handleAuth("login")}
-              disabled={loading}
-            >
-              Sign In
-            </Button>
-            <Button
-              className="w-full bg-secondary-foreground text-secondary hover:bg-secondary-foreground/90"
-              onClick={() => handleAuth("signup")}
-              disabled={loading}
-            >
-              Sign Up
-            </Button>
-          </div>
+          <Button
+            className="w-full bg-accent text-primary-foreground hover:bg-accent/90"
+            onClick={handleGoogleSignIn}
+          >
+            Sign in with Google
+          </Button>
         </div>
       </div>
     </div>
