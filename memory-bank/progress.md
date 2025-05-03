@@ -2,23 +2,29 @@
 
 ## What Works
 
-- Memory Bank documentation is being reconstructed to restore project context.
-- Core project structure and architecture are defined in projectbrief.md.
-- Initial documentation files (productContext.md, activeContext.md, systemPatterns.md, techContext.md) have been created.
+- All core Memory Bank files are created and up to date.
+- Project cloned, dependencies installed, and Vite + React setup verified.
+- `.env` created for Firebase and OpenAI keys; `.gitignore` updated to exclude `.env`.
+- Firebase configured and initialized in code; Firestore db exported.
+- Firestore security rules set and published in Firebase Console.
+- Firestore collection creation handled automatically in code.
+- `saveEntry` function implemented to save entries with content, poem, created_at, and userId.
+- All phase 0, 1.1, 1.2, 2.1, and 2.2 tasks completed and checked off in tasks.md.
 
 ## What's Left to Build
 
+- Implement Firestore data fetching and UI integration for journal entries.
+- Add user authentication and secure entry saving.
 - Continue updating and maintaining Memory Bank files as development progresses.
-- Resume feature development and document significant changes.
-- Add detailed documentation for complex features, integrations, and testing as needed.
+- Add documentation for complex features, integrations, and testing as needed.
 
 ## Current Status
 
-- Memory Bank restoration in progress.
-- All required core files have been initialized with content based on projectbrief.md.
-- Ready for ongoing updates as the project evolves.
+- MVP setup and Firebase integration complete.
+- Secure credential management in place.
+- Ready to implement Firestore data functions and UI integration for journal entries.
 
 ## Known Issues
 
 - No outstanding technical issues at this stage.
-- Documentation will need to be updated as new features are implemented or changes occur.
+- Documentation will be updated as new features are implemented or changes occur.

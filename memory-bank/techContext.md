@@ -29,7 +29,9 @@
 - React Router for client-side routing.
 - Firebase for backend services (authentication and data storage).
 - OpenAI APIs for AI-powered features.
-- Environment variables are used for API keys and sensitive configuration.
+- Environment variables are used for API keys and sensitive configuration, stored in a `.env` file excluded from git via `.gitignore`.
+- `src/config.ts` loads credentials from environment variables.
+- `src/saveEntry.ts` abstracts Firestore writes for journal entries.
 - Hosted initially on GitHub Pages; Vercel planned for future deployment.
 
 ## Technical Constraints
