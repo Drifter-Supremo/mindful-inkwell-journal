@@ -38,7 +38,7 @@
 ## Environment & Data Patterns
 
 - **Environment Variables:** Sensitive credentials (Firebase, OpenAI) are managed via a `.env` file and accessed in code through Vite's import.meta.env. `.env` is excluded from version control via `.gitignore`.
-- **Data Abstraction:** The `saveEntry` function in `src/saveEntry.ts` abstracts Firestore writes, ensuring all entries include content, poem, created_at, and userId fields.
+- **Data Abstraction:** The `saveEntry` function in `src/saveEntry.ts` abstracts Firestore writes, ensuring all entries include content, poem, created_at, and userId fields. The `getEntries` function in `src/getEntries.ts` abstracts Firestore reads and is used to refresh UI state after saving.
 - **Security:** Firestore security rules are set and published in the Firebase Console.
 
 This architecture supports modularity, scalability, and a seamless user experience.

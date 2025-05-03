@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Mic, MicOff } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { saveEntry } from "../saveEntry";
 
 const NewEntry = () => {
   const [content, setContent] = useState("");
@@ -17,9 +18,11 @@ const NewEntry = () => {
       toast.error("Please enter some content before saving");
       return;
     }
-    
-    // Mock saving entry
-    console.log("Saving entry:", content);
+    // Placeholder for AI poem generation
+    const poem = "When integrated with AI, a poem based on your journal entry will appear here.";
+    // TODO: Replace with actual userId from auth when available
+    const userId = "demo-user";
+    await saveEntry(content, poem, userId);
     toast.success("Entry saved successfully!");
     navigate("/entries");
   };

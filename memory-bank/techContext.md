@@ -32,6 +32,8 @@
 - Environment variables are used for API keys and sensitive configuration, stored in a `.env` file excluded from git via `.gitignore`.
 - `src/config.ts` loads credentials from environment variables.
 - `src/saveEntry.ts` abstracts Firestore writes for journal entries.
+- `src/getEntries.ts` abstracts Firestore reads for fetching journal entries.
+- `EntriesList.tsx`, `NewEntryModal.tsx`, and `NewEntry.tsx` are integrated with Firestore for real data.
 - Hosted initially on GitHub Pages; Vercel planned for future deployment.
 
 ## Technical Constraints

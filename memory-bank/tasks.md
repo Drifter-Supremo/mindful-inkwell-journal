@@ -110,7 +110,7 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
   - `userId`: string (added later with authentication)
 
 ### 2.3 Data Functions
-- [ ] Write a function to save an entry to Firestore in a `firebase.ts` file:
+- [x] Write a function to save an entry to Firestore in a `firebase.ts` file:
   ```typescript
   import { db } from './main';
   import { collection, addDoc } from 'firebase/firestore';
@@ -124,7 +124,7 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
     await addDoc(collection(db, 'entries'), entry);
   }
   ```
-- [ ] Write a function to fetch entries:
+- [x] Write a function to fetch entries:
   ```typescript
   import { collection, getDocs } from 'firebase/firestore';
 
@@ -133,7 +133,7 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
     return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   }
   ```
-- [ ] Update `EntriesList.tsx` to fetch and display Firestore data:
+- [x] Update `EntriesList.tsx` to fetch and display Firestore data:
   ```typescript
   import { getEntries } from '../firebase';
 
@@ -142,7 +142,7 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
     getEntries().then(setEntries);
   }, []);
   ```
-- [ ] Update `NewEntryModal.tsx` and `NewEntry.tsx` to save to Firestore:
+- [x] Update `NewEntryModal.tsx` and `NewEntry.tsx` to save to Firestore:
   ```typescript
   import { saveEntry } from '../firebase';
 

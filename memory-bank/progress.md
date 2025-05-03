@@ -9,20 +9,22 @@
 - Firestore security rules set and published in Firebase Console.
 - Firestore collection creation handled automatically in code.
 - `saveEntry` function implemented to save entries with content, poem, created_at, and userId.
-- All phase 0, 1.1, 1.2, 2.1, and 2.2 tasks completed and checked off in tasks.md.
+- `getEntries` function implemented to fetch entries from Firestore.
+- `EntriesList.tsx` fetches and displays Firestore data, refreshing after new entries.
+- `NewEntryModal.tsx` and `NewEntry.tsx` save entries to Firestore using `saveEntry`.
+- All phase 0, 1.1, 1.2, 2.1, 2.2, and 2.3 tasks completed and checked off in tasks.md.
 
 ## What's Left to Build
 
-- Implement Firestore data fetching and UI integration for journal entries.
 - Add user authentication and secure entry saving.
 - Continue updating and maintaining Memory Bank files as development progresses.
 - Add documentation for complex features, integrations, and testing as needed.
 
 ## Current Status
 
-- MVP setup and Firebase integration complete.
+- MVP setup, Firebase integration, and Firestore data functions/UI integration are complete.
 - Secure credential management in place.
-- Ready to implement Firestore data functions and UI integration for journal entries.
+- Ready to implement user authentication and secure entry saving.
 
 ## Known Issues
 

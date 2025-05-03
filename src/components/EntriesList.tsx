@@ -8,33 +8,18 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import NewEntryModal from "./NewEntryModal";
 
-// Enhanced mock data for entries with poems
-const mockEntries = [
-  {
-    id: "1",
-    content: "Today I went for a long walk in the park and felt really refreshed afterward. The weather was perfect and I took some time to just sit on a bench and watch people go by. It's amazing how therapeutic nature can be.",
-    poem: "Green leaves dancing in the breeze,\nSunshine warming my skin with ease.\nStrangers passing, stories untold,\nIn nature's embrace, peace unfolds.",
-    created_at: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(), // 2 hours ago
-  },
-  {
-    id: "2",
-    content: "I've been thinking about my goals for next month. I want to focus more on my health and reading. Maybe I'll start that new workout routine I've been putting off and finally finish the book that's been sitting on my nightstand.",
-    poem: "Aspirations set, a month ahead,\nStrength in body, wisdom in head.\nPages turning, muscles growing,\nA better self, forever knowing.",
-    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(), // 1 day ago
-  },
-  {
-    id: "3",
-    content: "Had a great conversation with an old friend today. It's amazing how some connections never fade despite time and distance. We picked up right where we left off, as if no time had passed at all.",
-    poem: "Time may flow like rivers wide,\nYet true bonds forever abide.\nVoices familiar, laughter shared,\nProving friendship's depth declared.",
-    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString(), // 3 days ago
-  },
-];
+import { getEntries } from "../getEntries";
+import { saveEntry } from "../saveEntry";
 
 const EntriesList = () => {
   const [isRecording, setIsRecording] = useState(false);
-  const [entries, setEntries] = useState(mockEntries);
+  const [entries, setEntries] = useState<any[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [expandedEntryId, setExpandedEntryId] = useState<string | null>(null);
+
+  useEffect(() => {
+    getEntries().then(setEntries);
+  }, []);
 
   const toggleRecording = () => {
     if (!isRecording) {
@@ -61,16 +46,15 @@ const EntriesList = () => {
     }
   };
 
-  const handleNewTextEntry = (content: string) => {
-    // Add new text entry (with AI poem generation)
-    const newEntry = {
-      id: `${Date.now()}`,
-      content,
-      poem: "AI will analyze your entry,\nCrafting verses thoughtful and free.\nMirroring emotions you've expressed,\nIn poetic form, beautifully dressed.",
-      created_at: new Date().toISOString(),
-    };
-    
-    setEntries([newEntry, ...entries]);
+  const handleNewTextEntry = async (content: string) => {
+    // Placeholder for AI poem generation
+    const poem = "AI will analyze your entry,\nCrafting verses thoughtful and free.\nMirroring emotions you've expressed,\nIn poetic form, beautifully dressed.";
+    // TODO: Replace with actual userId from auth when available
+    const userId = "demo-user";
+    await saveEntry(content, poem, userId);
+    // Refresh entries from Firestore
+    const updatedEntries = await getEntries();
+    setEntries(updatedEntries);
   };
 
   const toggleExpandEntry = (id: string) => {
