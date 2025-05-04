@@ -10,6 +10,10 @@
   - Improved login page with larger, more dynamic logo
   - Improved filter buttons with green outline for active state
   - Fixed filter drawer behavior to close when any filter button is clicked (including "Clear Filter")
+  - Enhanced search functionality with improved mobile responsiveness:
+    - Search bar now hides the logo on mobile when expanded to prevent overlap
+    - Search can be closed by clicking outside the search area
+    - Search icon maintains consistent positioning when search is closed
 - Journal entries display improvements
   - Entries now sorted chronologically with newest first
   - Smart date formatting (relative time for recent entries, date format for older entries)
@@ -73,6 +77,11 @@
 
 ## Recently Resolved Issues
 
+- Search functionality improvements:
+  - Fixed search bar overlap with logo on mobile devices by hiding the logo when search is expanded
+  - Implemented click-outside detection to close the search bar when clicking elsewhere on the page
+  - Fixed search icon positioning to maintain consistent placement when search is closed
+  - Improved search bar responsiveness on different screen sizes
 - Font implementation issue: Successfully changed poem font to Gloria Hallelujah, which provides a handwritten style that is both creative and readable.
 - Fixed Gorlea's signature position to be directly under the poem text instead of right-aligned to prevent it from being cut off by buttons.
 - Fixed date filtering logic to properly handle different time periods (Today, This Week, Last Month, Last Year).

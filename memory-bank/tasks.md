@@ -354,6 +354,7 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
 - [x] Implement chronological sorting of entries with newest first.
 - [x] Add smart date formatting (relative for recent entries, date format for older entries).
 - [x] Verify Google Sign-In and data security.
+- [x] Implement and test search functionality with mobile responsiveness improvements.
 - [ ] Check deployed site functionality.
 
 ### 8.2 Fix Issues
