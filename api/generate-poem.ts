@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+export const config = { runtime: "nodejs" };
 
 export default async function handler(req, res) {
   // Allow only POST
