@@ -109,12 +109,12 @@ const NewEntry = () => {
           onChange={(e) => setContent(e.target.value)}
         />
 
-        
+
         <div className="mt-4 flex justify-between">
           <Button
             className={cn(
               "transition-all duration-300",
-              isRecording 
+              isRecording
                 ? "bg-red-500 hover:bg-red-600 animate-pulse"
                 : "bg-accent/80 hover:bg-accent"
             )}
@@ -132,9 +132,9 @@ const NewEntry = () => {
               </>
             )}
           </Button>
-          
-          <Button 
-            className="bg-accent text-primary hover:bg-accent/90" 
+
+          <Button
+            className="bg-accent text-primary hover:bg-accent/90"
             onClick={handleSave}
             disabled={isRecording || (!content.trim() && !audioBlob)}
           >
@@ -145,9 +145,9 @@ const NewEntry = () => {
         {/* Placeholder for AI Poem Generation */}
         {content && (
           <div className="mt-8 p-4 border border-primary/20 rounded-md bg-secondary/10">
-            <h3 className="text-accent font-semibold mb-2">AI Poem Preview</h3>
             <p className="text-primary-foreground/80 italic">
-              When integrated with AI, a poem based on your journal entry will appear here.
+              When you save your entry, Gorlea will write a poem inspired by your words.
+              <span className="block text-right text-accent/80 text-sm mt-2">~ Gorlea</span>
             </p>
           </div>
         )}

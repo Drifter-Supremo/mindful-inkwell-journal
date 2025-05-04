@@ -86,7 +86,7 @@ const EntriesList = () => {
           const contentPreview = entry.content.length > 100 && !isExpanded
             ? `${entry.content.substring(0, 100)}...`
             : entry.content;
-          
+
           // Desktop delete handler
           const handleDelete = async (e: React.MouseEvent) => {
             e.stopPropagation();
@@ -113,10 +113,10 @@ const EntriesList = () => {
             if (longPressTimeout) clearTimeout(longPressTimeout);
           };
 
-          
+
           return (
-            <Card 
-              key={entry.id} 
+            <Card
+              key={entry.id}
               className={cn(
                 "bg-secondary/20 border-primary/20 transition-all duration-300",
                 isExpanded ? "shadow-md" : ""
@@ -126,7 +126,7 @@ const EntriesList = () => {
               onTouchMove={handleLongPressEnd}
             >
               <CardContent className="p-4">
-                <div 
+                <div
                   className="flex justify-between items-start cursor-pointer"
                   onClick={() => toggleExpandEntry(entry.id)}
                 >
@@ -139,9 +139,9 @@ const EntriesList = () => {
                     )}
                   </div>
                   <div className="flex flex-col items-end gap-2">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       className="mt-1 h-6 w-6 p-0 text-primary-foreground/60 hover:text-primary-foreground hover:bg-transparent"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -165,17 +165,21 @@ const EntriesList = () => {
                     </Button>
                   </div>
                 </div>
-                
+
 
                 {isExpanded && entry.poem && (
-                  <div 
+                  <div
                     className="mt-4 pt-4 border-t border-primary/20 animate-fade-in"
                   >
-                    <h4 className="text-accent font-semibold mb-2">AI-Generated Poem</h4>
-                    <p className="text-primary-foreground/90 italic whitespace-pre-wrap">{entry.poem}</p>
+                    <p className="text-primary-foreground/90 italic whitespace-pre-wrap">
+                      {entry.poem}
+                      {entry.poem && (
+                        <span className="block text-right text-accent/80 text-sm mt-2">~ Gorlea</span>
+                      )}
+                    </p>
                   </div>
                 )}
-                
+
                 <p className="mt-3 text-sm text-primary-foreground/60">
                   {formatDistanceToNow(new Date(entry.created_at), { addSuffix: true })}
                 </p>
@@ -184,7 +188,7 @@ const EntriesList = () => {
           );
         })}
       </div>
-      
+
       {/* New Entry Button */}
       <Button
         size="icon"
@@ -193,14 +197,14 @@ const EntriesList = () => {
       >
         <Plus className="h-6 w-6 text-primary" />
       </Button>
-      
+
       {/* Voice Recording Button */}
       <Button
         size="icon"
         className={cn(
           "fixed bottom-6 right-6 h-14 w-14 rounded-full transition-all duration-300",
-          isRecording 
-            ? "bg-red-500 hover:bg-red-600 animate-pulse" 
+          isRecording
+            ? "bg-red-500 hover:bg-red-600 animate-pulse"
             : "bg-accent hover:bg-accent/90"
         )}
         onClick={async () => {
@@ -258,10 +262,10 @@ const EntriesList = () => {
         )}
       </Button>
 
-      <NewEntryModal 
-        open={modalOpen} 
-        onOpenChange={setModalOpen} 
-        onSave={handleNewTextEntry} 
+      <NewEntryModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        onSave={handleNewTextEntry}
       />
       {/* Delete Entry Modal for mobile long-press */}
       <DeleteEntryModal

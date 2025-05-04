@@ -13,6 +13,8 @@
 - Vite proxy is used for seamless local development
 - Robust error handling on both frontend and backend
 - System prompt ensures non-rhyming, reflective poetry
+- Personalized poem presentation with Gorlea signature
+- Removed "AI-Generated Poem" label for a more personal experience
 
 ## Key Technical Decisions
 
@@ -35,16 +37,17 @@
 
 ## Component Relationships
 
-- **EntriesList.tsx:** Displays all journal entries for the authenticated user, triggers new entry creation. The microphone button now simulates a voice entry, persists it to Firestore, and refreshes the list.
+- **EntriesList.tsx:** Displays all journal entries for the authenticated user, triggers new entry creation. The microphone button captures real voice entries, transcribes them using OpenAI, persists them to Firestore, and refreshes the list. Poems are displayed with a personal Gorlea signature.
 - **NewEntryModal.tsx:** Handles text entry creation with validation and feedback.
-- **NewEntry.tsx:** Manages both text and voice input, integrates with AI for transcription and poetry. Voice notes are currently placeholders and not persisted.
+- **NewEntry.tsx:** Manages both text and voice input, integrates with AI for transcription and poetry. Includes a preview of how Gorlea will respond to journal entries.
 - **FilterDrawer.tsx:** Provides filter options and a persistent "Log Out" button for authenticated users.
 - **UI Components:** Shared components (from shadcn/ui) provide consistent styling and behavior across the app.
 
 ## Integration Overview
 
-- **Firestore:** Stores entries, poems, timestamps, and user IDs. All queries are filtered by the authenticated user's `uid`. Simulated voice entries are now saved and retrieved identically to manual entries.
-- **OpenAI:** Handles speech-to-text and text generation.
+- **Firestore:** Stores entries, poems, timestamps, and user IDs. All queries are filtered by the authenticated user's `uid`. Voice entries are transcribed and saved identically to manual entries.
+- **OpenAI:** Handles speech-to-text transcription for voice entries.
+- **DeepSeek:** Generates personalized poetry based on journal entries through a secure Express backend.
 - **RecordRTC:** Captures audio for voice entries.
 
 ## Environment & Data Patterns

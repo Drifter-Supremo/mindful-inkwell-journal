@@ -280,33 +280,44 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
 
 ---
 
-## ✍️ PHASE 6: INTEGRATE OPENAI'S API FOR POEM GENERATION
+## ✍️ PHASE 6: INTEGRATE DEEPSEEK API FOR POEM GENERATION
 
 ### 6.1 Poem Generation
-- [ ] Generate a poem when saving an entry:
+- [x] Generate a poem when saving an entry using DeepSeek API:
   ```typescript
-  const generatePoem = async (content: string) => {
-    const response = await openai.createCompletion({
-      model: 'text-davinci-003',
-      prompt: `Write a short poem based on this journal entry: ${content}`,
-      max_tokens: 50,
+  // Calls the backend API route to generate a poem securely
+  export async function generatePoem(entry: string): Promise<string> {
+    const response = await fetch('/api/generate-poem', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ entry }),
     });
-    return response.data.choices[0].text.trim();
-  };
+    if (!response.ok) {
+      throw new Error('Failed to generate poem');
+    }
+    const data = await response.json();
+    return data.poem || '';
+  }
 
   const handleSave = async () => {
     const poem = await generatePoem(content);
     await saveEntry(content, poem, auth.currentUser?.uid);
   };
   ```
-- [ ] Display the poem in `EntriesList.tsx`:
+- [x] Display the poem in `EntriesList.tsx` with a personal touch:
   ```typescript
-  {entries.map(entry => (
-    <div key={entry.id}>
-      <p>{entry.content}</p>
-      <p><em>{entry.poem}</em></p>
+  {isExpanded && entry.poem && (
+    <div className="mt-4 pt-4 border-t border-primary/20 animate-fade-in">
+      <p className="text-primary-foreground/90 italic whitespace-pre-wrap">
+        {entry.poem}
+        {entry.poem && (
+          <span className="block text-right text-accent/80 text-sm mt-2">~ Gorlea</span>
+        )}
+      </p>
     </div>
-  ))}
+  )}
   ```
 
 ---
@@ -336,10 +347,11 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
 ## 🧼 PHASE 8: TESTING AND BUG FIXES
 
 ### 8.1 Test Features
-- [ ] Test manual text entry creation and display.
-- [ ] Test voice recording and transcription.
+- [x] Test manual text entry creation and display.
+- [x] Test voice recording and transcription.
 - [x] Integrate DeepSeek API for poetry generation and display.
-- [ ] Verify Google Sign-In and data security.
+- [x] Personalize poem display with Gorlea signature.
+- [x] Verify Google Sign-In and data security.
 - [ ] Check deployed site functionality.
 
 ### 8.2 Fix Issues
@@ -349,15 +361,15 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
 
 ## ✅ PHASE 9: DONE WHEN…
 
-- [ ] Text and voice entries save to Firestore with `userId`.
-- [ ] Voice recordings transcribe correctly.
-- [ ] Poems generate and display with entries.
-- [ ] Google Sign-In authentication works.
+- [x] Text and voice entries save to Firestore with `userId`.
+- [x] Voice recordings transcribe correctly.
+- [x] Poems generate and display with entries with personal Gorlea signature.
+- [x] Google Sign-In authentication works.
 - [ ] App runs smoothly on GitHub Pages.
 
 ---
 
-**MVP Status:** In Development  
-**Lead Developer:** Drifter-Supremo  
-**Start Date:** [Insert Start Date]  
+**MVP Status:** In Development
+**Lead Developer:** Drifter-Supremo
+**Start Date:** [Insert Start Date]
 **Target Completion:** [Insert Target Date, 2 days from start]
