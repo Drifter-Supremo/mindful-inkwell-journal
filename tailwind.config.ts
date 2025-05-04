@@ -12,7 +12,7 @@ export default {
   theme: {
     fontFamily: {
       sans: ['Nunito', 'sans-serif'],
-      poem: ['Caveat', 'cursive'],
+      poem: ['Gloria Hallelujah', 'cursive'],
     },
     container: {
       center: true,

@@ -19,6 +19,8 @@
   - System prompts ensure non-rhyming, reflective poetry
   - Personalized poem presentation with Gorlea signature
   - Removed "AI-Generated Poem" label for a more personal experience
+  - Implemented Gloria Hallelujah font for poems to create a handwritten style that's creative yet readable
+  - Repositioned Gorlea's signature to be directly under poem text for better visibility and layout
 - All core Memory Bank files are created and up to date.
 - Project cloned, dependencies installed, and Vite + React setup verified.
 - `.env` created for Firebase and OpenAI keys; `.gitignore` updated to exclude `.env`.
@@ -61,5 +63,13 @@
 
 ## Known Issues
 
-- No outstanding technical issues at this stage.
+- No known issues at this time.
+
+## Recently Resolved Issues
+
+- Font implementation issue: Successfully changed poem font to Gloria Hallelujah, which provides a handwritten style that is both creative and readable.
+- Fixed Gorlea's signature position to be directly under the poem text instead of right-aligned to prevent it from being cut off by buttons.
+- Current font configuration:
+  - Main UI font: Nunito (working correctly)
+  - Poem font: Gloria Hallelujah (working correctly)
 - Documentation will be updated as new features are implemented or changes occur.
