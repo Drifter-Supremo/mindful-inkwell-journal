@@ -83,18 +83,11 @@ const EntriesList = () => {
       <div className="grid gap-4 pb-20">
         {entries.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-[50vh] text-center">
-            <div className="bg-secondary/10 border border-primary/10 rounded-lg p-8 max-w-md">
-              <p className="text-primary-foreground/80 text-lg mb-2">No journal entries yet</p>
-              <p className="text-primary-foreground/60 text-sm">
+            <div className="max-w-md p-4">
+              <p className="text-primary-foreground/90 text-xl mb-3">No journal entries yet</p>
+              <p className="text-primary-foreground/70 text-sm">
                 Start your journey by creating your first entry
               </p>
-              <div className="mt-6 opacity-70">
-                <img
-                  src="/Gorlea-logo.png"
-                  alt="Gorlea's Ink"
-                  className="h-16 mx-auto opacity-50"
-                />
-              </div>
             </div>
           </div>
         ) : (
@@ -203,7 +196,8 @@ const EntriesList = () => {
               </CardContent>
             </Card>
           );
-        })}
+        })
+        )}
       </div>
 
       {/* New Entry Button */}
