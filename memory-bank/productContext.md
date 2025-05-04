@@ -26,7 +26,8 @@ Gorlea's Ink (formerly Mindful Inkwell) is designed to make journaling accessibl
 - **Branding:** Consistent use of Gorlea's Ink branding and logo throughout the application.
 - **Creativity:** AI features that add value and delight, such as poetry generation and entry polishing.
 - **Accessibility:** Support for both text and voice input, with simulated voice entries now persisting like manual entries; responsive design for all devices.
-- **Feedback:** Real-time notifications and visual cues for actions like saving, recording, and errors.
+- **Filtering:** Date-based filters (Today, This Week, Last Month, Last Year) with green outlined buttons for active state and proper date range filtering.
+- **Feedback:** Real-time notifications and visual cues for actions like saving, recording, filtering, and errors.
 - **Security:** User authentication via Google Sign-In with official Google colors and logo to protect privacy and data.
 
 Gorlea's Ink aims to foster mindfulness, creativity, and consistency in journaling through a seamless blend of classic and modern technology.

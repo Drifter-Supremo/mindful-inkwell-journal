@@ -8,10 +8,14 @@
   - Enhanced Google sign-in button with official Google colors and logo
   - Added a clean, minimal "no journal entries yet" message when user has no entries
   - Improved login page with larger, more dynamic logo
+  - Improved filter buttons with green outline for active state
+  - Fixed filter drawer behavior to close when any filter button is clicked (including "Clear Filter")
 - Journal entries display improvements
   - Entries now sorted chronologically with newest first
   - Smart date formatting (relative time for recent entries, date format for older entries)
   - Added Firestore index for efficient sorting
+  - Implemented date-based filtering (Today, This Week, Last Month, Last Year) with proper date logic
+  - Added visual indicator for active filters with green outline
 - DeepSeek poetry generation fully integrated
   - Secure backend API endpoint via Express
   - Vite proxy setup for local development
@@ -56,6 +60,8 @@
   - Empty state message added for when user has no journal entries
   - Login page improved with larger, more dynamic logo
   - Logout button and toast notifications positioned for better usability
+  - Date filtering with green outlined active state for better visibility
+  - Consistent drawer behavior for all filter-related buttons
 - Real voice-to-text transcription using OpenAI is fully implemented and working.
 - DeepSeek poetry generation is fully implemented with personalized presentation.
 - Express server and Vite proxy configuration set up for secure API calls.
@@ -69,6 +75,9 @@
 
 - Font implementation issue: Successfully changed poem font to Gloria Hallelujah, which provides a handwritten style that is both creative and readable.
 - Fixed Gorlea's signature position to be directly under the poem text instead of right-aligned to prevent it from being cut off by buttons.
+- Fixed date filtering logic to properly handle different time periods (Today, This Week, Last Month, Last Year).
+- Improved filter button styling with green outlines for active state to ensure text remains visible.
+- Fixed filter drawer behavior to close when any filter button is clicked (including "Clear Filter").
 - Current font configuration:
   - Main UI font: Nunito (working correctly)
   - Poem font: Gloria Hallelujah (working correctly)

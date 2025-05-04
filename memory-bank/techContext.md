@@ -16,7 +16,7 @@
   - OpenAI GPT-4.1-mini (entry enhancement, poetry generation)
 - **Other Libraries**
   - RecordRTC (voice recording)
-  - date-fns (date utilities)
+  - date-fns (date utilities for formatting and filtering)
   - Sonner (toast notifications)
 
 ## Development Setup
@@ -33,7 +33,9 @@
 - `src/config.ts` loads credentials from environment variables.
 - `src/saveEntry.ts` abstracts Firestore writes for journal entries.
 - `src/getEntries.ts` abstracts Firestore reads for fetching journal entries.
+- `src/lib/dateFilters.ts` provides date range filtering functionality using date-fns.
 - `EntriesList.tsx`, `NewEntryModal.tsx`, and `NewEntry.tsx` are integrated with Firestore for real data, always scoped to the authenticated user's `uid`. Voice entries are now transcribed in real time using OpenAI and saved as text entries.
+- `FilterDrawer.tsx` provides date-based filtering options with consistent UI behavior.
 - Hosted initially on GitHub Pages; Vercel planned for future deployment.
 
 ## Technical Constraints
@@ -42,6 +44,7 @@
 - All authentication and data access is handled by Firebase Auth (Google sign-in) and Firestore, with all entry operations scoped to the authenticated user's `uid`.
 - The app must remain responsive and accessible across devices.
 - AI features depend on external API availability and rate limits.
+- Date filtering relies on date-fns library for consistent date handling across browsers.
 - Initial state management is local (React useState); may evolve as complexity increases.
 
 ## Dependencies

@@ -27,6 +27,7 @@
 - **Branding:** App renamed to "Gorlea's Ink" with logo displayed in AppBar and login page.
 - **Authentication:** Google Sign-In via Firebase Auth with official Google colors and logo for secure, user-friendly login. All authentication and user state is managed via Firebase; Supabase has been fully removed.
 - **User Data Scoping:** All Firestore entry operations (save, fetch) are scoped to the authenticated user's `uid`.
+- **Date Filtering:** Entries can be filtered by date ranges (Today, This Week, Last Month, Last Year) with proper date logic using date-fns library. Active filters are visually indicated with green outlines.
 - **Logout Accessibility:** A "Log Out" button is always available in the FilterDrawer for authenticated users.
 - **Toast Placement:** Toast notifications are positioned in the top-right to avoid UI overlap.
 
@@ -42,7 +43,7 @@
 - **EntriesList.tsx:** Displays all journal entries for the authenticated user sorted by date (newest first), triggers new entry creation. Shows a clean, minimal "no journal entries yet" message when the user has no entries. The microphone button captures real voice entries, transcribes them using OpenAI, persists them to Firestore, and refreshes the list. Poems are displayed with a personal Gorlea signature. Smart date formatting shows relative time for recent entries and date format for older entries.
 - **NewEntryModal.tsx:** Handles text entry creation with validation and feedback.
 - **NewEntry.tsx:** Manages both text and voice input, integrates with AI for transcription and poetry. Includes a preview of how Gorlea will respond to journal entries.
-- **FilterDrawer.tsx:** Provides filter options and a persistent "Log Out" button for authenticated users.
+- **FilterDrawer.tsx:** Provides date-based filter options (Today, This Week, Last Month, Last Year) with green outlined active state, and a persistent "Log Out" button for authenticated users. All filter buttons (including "Clear Filter") close the drawer when clicked.
 - **UI Components:** Shared components (from shadcn/ui) provide consistent styling and behavior across the app.
 
 ## Integration Overview
