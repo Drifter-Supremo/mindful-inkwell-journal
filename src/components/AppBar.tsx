@@ -13,7 +13,13 @@ const AppBar = ({ onMenuClick }: AppBarProps) => {
         <Button variant="ghost" size="icon" onClick={onMenuClick} className="text-primary-foreground">
           <Menu className="h-5 w-5" />
         </Button>
-        <h1 className="text-xl font-semibold text-primary-foreground">Mindful Inkwell</h1>
+        <div className="flex justify-center items-center">
+          <img
+            src="/Gorlea-logo.png"
+            alt="Gorlea's Ink"
+            className="h-10 object-contain"
+          />
+        </div>
         <div className="w-10" /> {/* Spacer for visual balance */}
       </div>
     </header>

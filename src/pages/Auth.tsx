@@ -34,7 +34,14 @@ const Auth = () => {
     <div className="min-h-screen bg-primary flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-8 bg-secondary p-6 rounded-lg shadow-lg">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-primary">Mindful Inkwell</h1>
+          <div className="flex justify-center mb-4">
+            <img
+              src="/Gorlea-logo.png"
+              alt="Gorlea's Ink"
+              className="h-16 object-contain"
+            />
+          </div>
+          <h1 className="text-2xl font-bold text-primary">Gorlea's Ink</h1>
           <p className="text-primary/60">Your private journaling space</p>
         </div>
         <div className="space-y-4">
