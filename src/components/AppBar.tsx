@@ -4,13 +4,15 @@ import { Button } from "./ui/button";
 import SearchBar from "./SearchBar";
 import SearchResults from "./SearchResults";
 import { useSearch } from "@/contexts/SearchContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 
 type AppBarProps = {
   onMenuClick: () => void;
 };
 
 const AppBar = ({ onMenuClick }: AppBarProps) => {
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const {
     searchQuery,
     setSearchQuery,
@@ -27,6 +29,11 @@ const AppBar = ({ onMenuClick }: AppBarProps) => {
     };
   }, [clearSearch]);
 
+  // Handle search expansion state change
+  const handleSearchExpandChange = (expanded: boolean) => {
+    setIsSearchExpanded(expanded);
+  };
+
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
@@ -42,7 +49,11 @@ const AppBar = ({ onMenuClick }: AppBarProps) => {
         <Button variant="ghost" size="icon" onClick={onMenuClick} className="text-primary-foreground">
           <Menu className="h-5 w-5" />
         </Button>
-        <div className="flex justify-center items-center">
+        <div className={cn(
+          "flex justify-center items-center transition-opacity duration-300",
+          // Hide logo on mobile when search is expanded, but keep it visible on larger screens
+          isSearchExpanded ? "opacity-0 md:opacity-100 max-md:invisible" : "opacity-100 visible"
+        )}>
           <img
             src="/Gorlea-logo.png"
             alt="Gorlea's Ink"
@@ -50,7 +61,10 @@ const AppBar = ({ onMenuClick }: AppBarProps) => {
           />
         </div>
         <div className="relative flex justify-end w-10 md:w-40 lg:w-64">
-          <SearchBar onSearch={handleSearch} />
+          <SearchBar
+            onSearch={handleSearch}
+            onExpandChange={handleSearchExpandChange}
+          />
           <SearchResults
             results={searchResults}
             query={searchQuery}

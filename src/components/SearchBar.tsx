@@ -8,9 +8,10 @@ import { cn } from "@/lib/utils";
 type SearchBarProps = {
   onSearch: (query: string) => void;
   className?: string;
+  onExpandChange?: (expanded: boolean) => void;
 };
 
-const SearchBar = ({ onSearch, className }: SearchBarProps) => {
+const SearchBar = ({ onSearch, className, onExpandChange }: SearchBarProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -20,7 +21,9 @@ const SearchBar = ({ onSearch, className }: SearchBarProps) => {
     if (isExpanded && inputRef.current) {
       inputRef.current.focus();
     }
-  }, [isExpanded]);
+    // Notify parent component about expansion state change
+    onExpandChange?.(isExpanded);
+  }, [isExpanded, onExpandChange]);
 
   // Handle search icon click
   const handleSearchIconClick = () => {
@@ -54,11 +57,11 @@ const SearchBar = ({ onSearch, className }: SearchBarProps) => {
         {isExpanded ? (
           <motion.div
             initial={{ width: 40, opacity: 0, x: 0 }}
-            animate={{ width: "240px", opacity: 1, x: 0 }}
+            animate={{ width: "calc(100vw - 80px)", opacity: 1, x: 0 }}
             exit={{ width: 40, opacity: 0, x: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="flex items-center absolute right-0"
-            style={{ zIndex: 100 }}
+            className="flex items-center absolute right-0 md:w-[240px]"
+            style={{ zIndex: 100, maxWidth: "240px" }}
           >
             <div className="relative w-full flex items-center">
               <Search className="absolute left-2 h-4 w-4 text-primary-foreground/60" />
