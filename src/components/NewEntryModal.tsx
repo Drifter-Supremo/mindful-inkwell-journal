@@ -63,19 +63,19 @@ const NewEntryModal = ({ open, onOpenChange, onSave }: NewEntryModalProps) => {
           animate="visible"
           transition={{ delay: 0.2 }}
         >
-          <DialogFooter>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <DialogFooter className="flex flex-col-reverse sm:flex-row gap-3 sm:gap-2">
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full sm:w-auto">
               <Button
                 variant="outline"
                 onClick={() => onOpenChange(false)}
-                className="border-accent text-primary-foreground hover:bg-primary/50"
+                className="border-accent text-primary-foreground hover:bg-primary/50 w-full"
               >
                 Cancel
               </Button>
             </motion.div>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full sm:w-auto">
               <Button
-                className="bg-accent text-primary hover:bg-accent/90"
+                className="bg-accent text-primary hover:bg-accent/90 w-full"
                 onClick={handleSave}
               >
                 Save Entry
