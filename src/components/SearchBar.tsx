@@ -15,15 +15,7 @@ const SearchBar = ({ onSearch, className, onExpandChange }: SearchBarProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
-
-  // Focus input when expanded
-  useEffect(() => {
-    if (isExpanded && inputRef.current) {
-      inputRef.current.focus();
-    }
-    // Notify parent component about expansion state change
-    onExpandChange?.(isExpanded);
-  }, [isExpanded, onExpandChange]);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
 
   // Handle search icon click
   const handleSearchIconClick = () => {
@@ -36,6 +28,38 @@ const SearchBar = ({ onSearch, className, onExpandChange }: SearchBarProps) => {
     setSearchQuery("");
     onSearch("");
   };
+
+  // Focus input when expanded and handle clicks outside
+  useEffect(() => {
+    if (isExpanded && inputRef.current) {
+      inputRef.current.focus();
+    }
+
+    // Notify parent component about expansion state change
+    onExpandChange?.(isExpanded);
+
+    // Handle clicks outside the search box
+    if (isExpanded) {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (
+          searchContainerRef.current &&
+          !searchContainerRef.current.contains(event.target as Node)
+        ) {
+          console.log("Click outside detected, closing search");
+          handleCloseIconClick();
+        }
+      };
+
+      // Add a small delay to prevent immediate closing
+      setTimeout(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+      }, 100);
+
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
+  }, [isExpanded, onExpandChange, handleCloseIconClick]);
 
   // Handle input change
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,16 +77,17 @@ const SearchBar = ({ onSearch, className, onExpandChange }: SearchBarProps) => {
 
   return (
     <div className={cn("relative flex items-center justify-end", className)}>
-      <AnimatePresence>
-        {isExpanded ? (
-          <motion.div
-            initial={{ width: 40, opacity: 0, x: 0 }}
-            animate={{ width: "calc(100vw - 80px)", opacity: 1, x: 0 }}
-            exit={{ width: 40, opacity: 0, x: 0 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="flex items-center absolute right-0 md:w-[240px]"
-            style={{ zIndex: 100, maxWidth: "240px" }}
-          >
+      <div ref={searchContainerRef} className="relative">
+        <AnimatePresence mode="wait">
+          {isExpanded ? (
+            <motion.div
+              initial={{ width: 40, opacity: 0, x: 0 }}
+              animate={{ width: "calc(100vw - 80px)", opacity: 1, x: 0 }}
+              exit={{ width: 40, opacity: 0, x: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="flex items-center absolute right-0 md:w-[240px]"
+              style={{ zIndex: 100, maxWidth: "240px" }}
+            >
             <div className="relative w-full flex items-center">
               <Search className="absolute left-2 h-4 w-4 text-primary-foreground/60" />
               <Input
@@ -89,6 +114,8 @@ const SearchBar = ({ onSearch, className, onExpandChange }: SearchBarProps) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            className="absolute right-0 flex items-center justify-center"
+            style={{ width: "40px", height: "40px" }}
           >
             <Button
               variant="ghost"
@@ -101,7 +128,8 @@ const SearchBar = ({ onSearch, className, onExpandChange }: SearchBarProps) => {
             </Button>
           </motion.div>
         )}
-      </AnimatePresence>
+        </AnimatePresence>
+      </div>
     </div>
   );
 };
