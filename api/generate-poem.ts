@@ -1,6 +1,11 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { OpenAI } from 'openai';
 
+// Log environment variables for debugging (excluding sensitive values)
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('VERCEL_ENV:', process.env.VERCEL_ENV);
+console.log('DEEPSEEK_API_KEY exists:', !!process.env.DEEPSEEK_API_KEY);
+
 const deepseek = new OpenAI({
   baseURL: 'https://api.deepseek.com',
   apiKey: process.env.DEEPSEEK_API_KEY,
@@ -23,6 +28,17 @@ The frontend will automatically add your signature, so focus solely on creating 
 `;
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+
+  // Handle OPTIONS request
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -34,6 +50,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
+    console.log('Generating poem for entry:', entry.substring(0, 50) + '...');
+
     const params: any = {
       model: 'deepseek-chat',
       temperature: 1.5,
@@ -44,11 +62,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       max_tokens: 512,
     };
 
+    console.log('Calling DeepSeek API...');
     const response = await deepseek.chat.completions.create(params);
     const poem = response.choices[0]?.message?.content?.trim() || '';
+    console.log('Poem generated successfully');
 
     return res.status(200).json({ poem });
   } catch (err: any) {
+    console.error('Error generating poem:', err);
     return res.status(500).json({ error: err.message || 'Failed to generate poem.' });
   }
 }
