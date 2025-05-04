@@ -4,6 +4,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { toast } from "sonner";
+import { motion, AnimatePresence } from "framer-motion";
+import { fadeInVariants, slideUpVariants } from "@/lib/animations";
 
 type NewEntryModalProps = {
   open: boolean;
@@ -19,7 +21,7 @@ const NewEntryModal = ({ open, onOpenChange, onSave }: NewEntryModalProps) => {
       toast.error("Please enter some content for your journal entry");
       return;
     }
-    
+
     onSave(content);
     setContent("");
     onOpenChange(false);
@@ -28,35 +30,59 @@ const NewEntryModal = ({ open, onOpenChange, onSave }: NewEntryModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-primary border-accent text-primary-foreground sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-primary-foreground">New Journal Entry</DialogTitle>
-        </DialogHeader>
-        
-        <div className="py-4">
+      <DialogContent className="bg-primary border-accent text-primary-foreground sm:max-w-md overflow-hidden">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <DialogHeader>
+            <DialogTitle className="text-primary-foreground">New Journal Entry</DialogTitle>
+          </DialogHeader>
+        </motion.div>
+
+        <motion.div
+          className="py-4"
+          variants={slideUpVariants}
+          initial="hidden"
+          animate="visible"
+          transition={{ delay: 0.1 }}
+        >
           <Textarea
             className="min-h-[200px] bg-secondary/20 text-primary-foreground placeholder:text-primary-foreground/60"
             placeholder="What's on your mind today?"
             value={content}
             onChange={(e) => setContent(e.target.value)}
+            autoFocus
           />
-        </div>
-        
-        <DialogFooter>
-          <Button 
-            variant="outline" 
-            onClick={() => onOpenChange(false)}
-            className="border-accent text-primary-foreground hover:bg-primary/50"
-          >
-            Cancel
-          </Button>
-          <Button 
-            className="bg-accent text-primary hover:bg-accent/90" 
-            onClick={handleSave}
-          >
-            Save Entry
-          </Button>
-        </DialogFooter>
+        </motion.div>
+
+        <motion.div
+          variants={fadeInVariants}
+          initial="hidden"
+          animate="visible"
+          transition={{ delay: 0.2 }}
+        >
+          <DialogFooter>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+                className="border-accent text-primary-foreground hover:bg-primary/50"
+              >
+                Cancel
+              </Button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                className="bg-accent text-primary hover:bg-accent/90"
+                onClick={handleSave}
+              >
+                Save Entry
+              </Button>
+            </motion.div>
+          </DialogFooter>
+        </motion.div>
       </DialogContent>
     </Dialog>
   );

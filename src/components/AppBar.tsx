@@ -6,6 +6,8 @@ import SearchResults from "./SearchResults";
 import { useSearch } from "@/contexts/SearchContext";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import { logoVariants } from "@/lib/animations";
 
 type AppBarProps = {
   onMenuClick: () => void;
@@ -46,9 +48,15 @@ const AppBar = ({ onMenuClick }: AppBarProps) => {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-primary px-4 py-3">
       <div className="flex items-center justify-between">
-        <Button variant="ghost" size="icon" onClick={onMenuClick} className="text-primary-foreground">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onMenuClick}
+          className="text-primary-foreground hover:bg-primary/20"
+        >
           <Menu className="h-5 w-5" />
         </Button>
+
         <div className={cn(
           "flex justify-center items-center transition-opacity duration-300",
           // Hide logo on mobile when search is expanded, but keep it visible on larger screens
@@ -57,9 +65,10 @@ const AppBar = ({ onMenuClick }: AppBarProps) => {
           <img
             src="/Gorlea-logo.png"
             alt="Gorlea's Ink"
-            className="h-10 object-contain"
+            className="h-10 object-contain hover:scale-105 transition-transform"
           />
         </div>
+
         <div className="relative flex justify-end w-10 md:w-40 lg:w-64">
           <SearchBar
             onSearch={handleSearch}

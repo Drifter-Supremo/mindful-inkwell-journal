@@ -9,6 +9,8 @@ import { Mic, MicOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { saveEntry } from "../saveEntry";
 import { useAuth } from "@/contexts/AuthContext";
+import { motion, AnimatePresence } from "framer-motion";
+import { fadeInVariants, slideUpVariants, poemRevealVariants, buttonVariants } from "@/lib/animations";
 
 const NewEntry = () => {
   const [content, setContent] = useState("");
@@ -100,59 +102,120 @@ const NewEntry = () => {
   };
 
   return (
-    <div className="min-h-screen bg-primary p-4">
-      <div className="mx-auto max-w-2xl">
-        <Textarea
-          className="min-h-[300px] bg-secondary/20 text-primary-foreground placeholder:text-primary-foreground/60"
-          placeholder="Write your thoughts..."
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        />
+    <motion.div
+      className="min-h-screen bg-primary p-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <motion.div
+        className="mx-auto max-w-2xl"
+        variants={fadeInVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.div
+          variants={slideUpVariants}
+          initial="hidden"
+          animate="visible"
+          transition={{ delay: 0.1 }}
+        >
+          <Textarea
+            className="min-h-[300px] bg-secondary/20 text-primary-foreground placeholder:text-primary-foreground/60"
+            placeholder="Write your thoughts..."
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            autoFocus
+          />
+        </motion.div>
 
-
-        <div className="mt-4 flex justify-between">
-          <Button
-            className={cn(
-              "transition-all duration-300",
-              isRecording
-                ? "bg-red-500 hover:bg-red-600 animate-pulse"
-                : "bg-accent/80 hover:bg-accent"
-            )}
-            onClick={toggleRecording}
+        <motion.div
+          className="mt-4 flex justify-between"
+          variants={fadeInVariants}
+          initial="hidden"
+          animate="visible"
+          transition={{ delay: 0.2 }}
+        >
+          <motion.div
+            variants={buttonVariants}
+            whileHover="hover"
+            whileTap="tap"
+            animate={isRecording ? { scale: [1, 1.05, 1] } : {}}
+            transition={isRecording ? {
+              repeat: Infinity,
+              duration: 1.5,
+              repeatType: "reverse"
+            } : {}}
           >
-            {isRecording ? (
-              <>
-                <MicOff className="mr-2 h-4 w-4" />
-                Stop Recording
-              </>
-            ) : (
-              <>
-                <Mic className="mr-2 h-4 w-4" />
-                Record Voice Entry
-              </>
-            )}
-          </Button>
+            <Button
+              className={cn(
+                "transition-all duration-300",
+                isRecording
+                  ? "bg-red-500 hover:bg-red-600"
+                  : "bg-accent/80 hover:bg-accent"
+              )}
+              onClick={toggleRecording}
+            >
+              {isRecording ? (
+                <>
+                  <MicOff className="mr-2 h-4 w-4" />
+                  Stop Recording
+                </>
+              ) : (
+                <>
+                  <Mic className="mr-2 h-4 w-4" />
+                  Record Voice Entry
+                </>
+              )}
+            </Button>
+          </motion.div>
 
-          <Button
-            className="bg-accent text-primary hover:bg-accent/90"
-            onClick={handleSave}
-            disabled={isRecording || (!content.trim() && !audioBlob)}
+          <motion.div
+            variants={buttonVariants}
+            whileHover="hover"
+            whileTap="tap"
           >
-            Save Entry
-          </Button>
-        </div>
+            <Button
+              className="bg-accent text-primary hover:bg-accent/90"
+              onClick={handleSave}
+              disabled={isRecording || (!content.trim() && !audioBlob)}
+            >
+              Save Entry
+            </Button>
+          </motion.div>
+        </motion.div>
 
         {/* Placeholder for AI Poem Generation */}
-        {content && (
-          <div className="mt-8 p-4 border border-primary/20 rounded-md bg-secondary/10">
-            <p className="poem-text text-primary-foreground/80">
-              When you save your entry, Gorlea will write a poem inspired by your words.
-            </p>
-            <p className="text-accent/80 text-sm mt-2 font-poem">~ Gorlea</p>
-          </div>
-        )}
-      </div>
-    </div>
+        <AnimatePresence>
+          {content && (
+            <motion.div
+              className="mt-8 p-4 border border-primary/20 rounded-md bg-secondary/10"
+              variants={poemRevealVariants}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+            >
+              <motion.p
+                className="poem-text text-primary-foreground/80"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+              >
+                When you save your entry, Gorlea will write a poem inspired by your words.
+              </motion.p>
+              <motion.p
+                className="text-accent/80 text-sm mt-2 font-poem"
+                initial={{ opacity: 0, x: -5 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                ~ Gorlea
+              </motion.p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </motion.div>
   );
 };
 

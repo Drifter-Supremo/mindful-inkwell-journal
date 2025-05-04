@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/formatDate";
 import NewEntryModal from "./NewEntryModal";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { saveEntry } from "../saveEntry";
 import { generatePoem } from "../generatePoem";
@@ -129,38 +129,86 @@ const EntriesList = ({ activeFilter }: EntriesListProps) => {
 
   return (
     <div className="relative min-h-screen bg-primary p-4">
-      <div className="grid gap-4 pb-20">
-        {activeFilter && (
-          <div className="bg-secondary/30 rounded-lg p-3 mb-2 flex items-center justify-between border-[#4CAF50] border-2">
-            <div className="flex items-center">
-              <FilterX className="h-4 w-4 mr-2 text-primary-foreground/70" />
-              <span className="text-primary-foreground/90">Filtered by: {activeFilter}</span>
-            </div>
-            <span className="text-xs text-primary-foreground/60">
-              {filteredEntries.length} {filteredEntries.length === 1 ? 'entry' : 'entries'} found
-            </span>
-          </div>
-        )}
+      <motion.div
+        className="grid gap-4 pb-20"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <AnimatePresence>
+          {activeFilter && (
+            <motion.div
+              className="bg-secondary/30 rounded-lg p-3 mb-2 flex items-center justify-between border-[#4CAF50] border-2"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="flex items-center">
+                <FilterX className="h-4 w-4 mr-2 text-primary-foreground/70" />
+                <span className="text-primary-foreground/90">Filtered by: {activeFilter}</span>
+              </div>
+              <span className="text-xs text-primary-foreground/60">
+                {filteredEntries.length} {filteredEntries.length === 1 ? 'entry' : 'entries'} found
+              </span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {allEntries.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-[50vh] text-center">
+          <motion.div
+            className="flex flex-col items-center justify-center h-[50vh] text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
             <div className="max-w-md p-4">
-              <p className="text-primary-foreground/90 text-xl mb-3">No journal entries yet</p>
-              <p className="text-primary-foreground/70 text-sm">
+              <motion.p
+                className="text-primary-foreground/90 text-xl mb-3"
+                initial={{ y: 10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.3 }}
+              >
+                No journal entries yet
+              </motion.p>
+              <motion.p
+                className="text-primary-foreground/70 text-sm"
+                initial={{ y: 10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.4 }}
+              >
                 Start your journey by creating your first entry
-              </p>
+              </motion.p>
             </div>
-          </div>
+          </motion.div>
         ) : filteredEntries.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-[50vh] text-center">
+          <motion.div
+            className="flex flex-col items-center justify-center h-[50vh] text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
             <div className="max-w-md p-4">
-              <p className="text-primary-foreground/90 text-xl mb-3">No entries match your filter</p>
-              <p className="text-primary-foreground/70 text-sm">
+              <motion.p
+                className="text-primary-foreground/90 text-xl mb-3"
+                initial={{ y: 10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.3 }}
+              >
+                No entries match your filter
+              </motion.p>
+              <motion.p
+                className="text-primary-foreground/70 text-sm"
+                initial={{ y: 10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.4 }}
+              >
                 Try a different filter or clear the current one
-              </p>
+              </motion.p>
             </div>
-          </div>
+          </motion.div>
         ) : (
-          filteredEntries.map((entry) => {
+          filteredEntries.map((entry, index) => {
             const isExpanded = expandedEntryId === entry.id;
             const contentPreview = entry.content.length > 100 && !isExpanded
               ? `${entry.content.substring(0, 100)}...`
@@ -196,21 +244,17 @@ const EntriesList = ({ activeFilter }: EntriesListProps) => {
             <motion.div
               key={entry.id}
               id={`entry-${entry.id}`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{
-                opacity: 1,
-                y: 0,
-                scale: selectedEntryId === entry.id ? 1.02 : 1
-              }}
-              transition={{ duration: 0.3 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: index * 0.05 }}
               className={cn(
-                "transition-all duration-500",
+                "transition-all duration-300 hover:shadow-md",
                 selectedEntryId === entry.id && "ring-2 ring-accent shadow-lg shadow-accent/30"
               )}
             >
             <Card
               className={cn(
-                "bg-secondary/20 border-primary/20 transition-all duration-300",
+                "bg-secondary/20 border-primary/20 transition-all duration-300 hover:translate-y-[-2px]",
                 isExpanded ? "shadow-md" : ""
               )}
               onTouchStart={handleLongPressStart}
@@ -227,14 +271,16 @@ const EntriesList = ({ activeFilter }: EntriesListProps) => {
                       {contentPreview}
                     </p>
                     {!isExpanded && entry.content.length > 100 && (
-                      <span className="text-accent text-sm">Click to read more</span>
+                      <span className="text-accent text-sm">
+                        Click to read more
+                      </span>
                     )}
                   </div>
                   <div className="flex flex-col items-end gap-2">
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="mt-1 h-6 w-6 p-0 text-primary-foreground/60 hover:text-primary-foreground hover:bg-transparent"
+                      className="mt-1 h-6 w-6 p-0 text-primary-foreground/60 hover:text-primary-foreground hover:bg-transparent hover:scale-110 transition-transform"
                       onClick={(e) => {
                         e.stopPropagation();
                         toggleExpandEntry(entry.id);
@@ -250,7 +296,7 @@ const EntriesList = ({ activeFilter }: EntriesListProps) => {
                       variant="ghost"
                       size="sm"
                       aria-label="Delete entry"
-                      className="h-6 w-6 p-0 text-destructive hover:text-destructive/80 hidden md:inline-flex"
+                      className="h-6 w-6 p-0 text-destructive hover:text-destructive/80 hidden md:inline-flex hover:scale-110 transition-transform"
                       onClick={handleDelete}
                     >
                       <Trash className="h-4 w-4" />
@@ -258,19 +304,26 @@ const EntriesList = ({ activeFilter }: EntriesListProps) => {
                   </div>
                 </div>
 
-
-                {isExpanded && entry.poem && (
-                  <div
-                    className="mt-4 pt-4 border-t border-primary/20 animate-fade-in"
-                  >
-                    <p className="poem-text text-primary-foreground/90 whitespace-pre-wrap">
-                      {entry.poem}
-                    </p>
-                    {entry.poem && (
-                      <p className="text-accent/80 text-sm mt-2 font-poem">~ Gorlea</p>
-                    )}
-                  </div>
-                )}
+                <AnimatePresence>
+                  {isExpanded && entry.poem && (
+                    <motion.div
+                      className="mt-4 pt-4 border-t border-primary/20"
+                      initial={{ opacity: 0, height: 0, overflow: "hidden" }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <p className="poem-text text-primary-foreground/90 whitespace-pre-wrap">
+                        {entry.poem}
+                      </p>
+                      {entry.poem && (
+                        <p className="text-accent/80 text-sm mt-2 font-poem">
+                          ~ Gorlea
+                        </p>
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
                 <p className="mt-3 text-sm text-primary-foreground/60">
                   {formatDate(entry.created_at)}
@@ -281,12 +334,12 @@ const EntriesList = ({ activeFilter }: EntriesListProps) => {
           );
         })
         )}
-      </div>
+      </motion.div>
 
       {/* New Entry Button */}
       <Button
         size="icon"
-        className="fixed bottom-24 right-6 h-14 w-14 rounded-full bg-accent hover:bg-accent/90 transition-all duration-300"
+        className="fixed bottom-24 right-6 h-14 w-14 rounded-full bg-accent hover:bg-accent/90 transition-all duration-300 shadow-md hover:shadow-lg"
         onClick={() => setModalOpen(true)}
       >
         <Plus className="h-6 w-6 text-primary" />
@@ -296,7 +349,7 @@ const EntriesList = ({ activeFilter }: EntriesListProps) => {
       <Button
         size="icon"
         className={cn(
-          "fixed bottom-6 right-6 h-14 w-14 rounded-full transition-all duration-300",
+          "fixed bottom-6 right-6 h-14 w-14 rounded-full transition-all duration-300 shadow-md hover:shadow-lg",
           isRecording
             ? "bg-red-500 hover:bg-red-600 animate-pulse"
             : "bg-accent hover:bg-accent/90"
