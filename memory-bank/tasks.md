@@ -322,25 +322,67 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
 
 ---
 
-## 🌐 PHASE 7: DEPLOYMENT ON GITHUB PAGES
+## 🌐 PHASE 7: DEPLOYMENT ON VERCEL
 
-### 7.1 Build and Deploy
-- [ ] Build the project:
-  ```bash
-  npm run build
+### 7.1 Prepare for Vercel Deployment
+- [x] Create a Vercel configuration file (vercel.json):
+  ```json
+  {
+    "version": 2,
+    "builds": [
+      {
+        "src": "package.json",
+        "use": "@vercel/static-build",
+        "config": {
+          "distDir": "dist"
+        }
+      },
+      {
+        "src": "api/**/*.ts",
+        "use": "@vercel/node"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/api/(.*)",
+        "dest": "/api/$1"
+      },
+      {
+        "src": "/(.*)",
+        "dest": "/index.html"
+      }
+    ]
+  }
   ```
-- [ ] In `vite.config.ts`, ensure the base is set for GitHub Pages:
+- [x] Add a vercel-build script to package.json:
+  ```json
+  "scripts": {
+    "vercel-build": "vite build"
+  }
+  ```
+- [x] Create serverless API function for poem generation:
   ```typescript
-  export default defineConfig({
-    base: '/mindful-inkwell-journal/',
-  });
+  // api/generate-poem.ts
+  import { VercelRequest, VercelResponse } from '@vercel/node';
+  import { OpenAI } from 'openai';
+
+  export default async function handler(req: VercelRequest, res: VercelResponse) {
+    // Poem generation logic
+  }
   ```
-- [ ] Deploy to GitHub Pages:
+- [x] Install Vercel Node.js types:
   ```bash
-  npm install -g gh-pages
-  gh-pages -d dist
+  npm install --save-dev @vercel/node
   ```
-- [ ] Verify the app at `https://Drifter-Supremo.github.io/mindful-inkwell-journal/`.
+- [x] Create environment variable documentation (.env.example)
+- [x] Create deployment guide (DEPLOYMENT.md)
+
+### 7.2 Deploy to Vercel
+- [ ] Push changes to GitHub repository
+- [ ] Connect repository to Vercel
+- [ ] Configure environment variables in Vercel dashboard
+- [ ] Deploy the application
+- [ ] Verify the app at the Vercel-provided URL
 
 ---
 
@@ -355,7 +397,10 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
 - [x] Add smart date formatting (relative for recent entries, date format for older entries).
 - [x] Verify Google Sign-In and data security.
 - [x] Implement and test search functionality with mobile responsiveness improvements.
-- [ ] Check deployed site functionality.
+- [x] Test mobile UI improvements (button spacing, animations).
+- [x] Verify poem formatting is natural and human-like.
+- [x] Test serverless function for poem generation locally.
+- [ ] Check deployed site functionality on Vercel.
 
 ### 8.2 Fix Issues
 - [ ] Debug and resolve any errors encountered.
@@ -368,11 +413,14 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
 - [x] Voice recordings transcribe correctly.
 - [x] Poems generate and display with entries with personal Gorlea signature.
 - [x] Google Sign-In authentication works.
-- [ ] App runs smoothly on GitHub Pages.
+- [x] Mobile UI is optimized with proper spacing and animations.
+- [x] Poem formatting is natural and human-like (no markdown or dashes).
+- [x] Vercel deployment configuration is complete.
+- [ ] App runs smoothly on Vercel.
 
 ---
 
-**MVP Status:** In Development
+**MVP Status:** Ready for Deployment
 **Lead Developer:** Drifter-Supremo
-**Start Date:** [Insert Start Date]
-**Target Completion:** [Insert Target Date, 2 days from start]
+**Start Date:** April 2024
+**Target Completion:** May 2024

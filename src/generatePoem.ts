@@ -1,4 +1,4 @@
-// Calls the backend API route to generate a poem securely
+// Calls the Vercel serverless function to generate a poem securely
 export async function generatePoem(entry: string): Promise<string> {
   const response = await fetch('/api/generate-poem', {
     method: 'POST',

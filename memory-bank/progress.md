@@ -21,7 +21,7 @@
   - Implemented date-based filtering (Today, This Week, Last Month, Last Year) with proper date logic
   - Added visual indicator for active filters with green outline
 - DeepSeek poetry generation fully integrated
-  - Secure backend API endpoint via Express
+  - Secure backend API endpoint via Express (development) and Vercel serverless functions (production)
   - Vite proxy setup for local development
   - Error handling on both frontend and backend
   - System prompts ensure non-rhyming, reflective poetry
@@ -29,6 +29,16 @@
   - Removed "AI-Generated Poem" label for a more personal experience
   - Implemented Gloria Hallelujah font for poems to create a handwritten style that's creative yet readable
   - Repositioned Gorlea's signature to be directly under poem text for better visibility and layout
+  - Updated system prompt to prevent markdown formatting and ensure natural poem style
+- Deployment preparation completed
+  - Created Vercel configuration file (vercel.json)
+  - Set up serverless function for poem generation
+  - Updated API routes for Vercel compatibility
+  - Added environment variable documentation
+  - Created deployment guide
+- Mobile UI improvements
+  - Fixed button spacing in the New Entry modal for better mobile usability
+  - Simplified animations for better performance on mobile devices
 - All core Memory Bank files are created and up to date.
 - Project cloned, dependencies installed, and Vite + React setup verified.
 - `.env` created for Firebase and OpenAI keys; `.gitignore` updated to exclude `.env`.
@@ -49,7 +59,8 @@
 
 ## Next Steps
 
-- Deploy the application to GitHub Pages
+- Deploy the application to Vercel
+- Configure environment variables in Vercel dashboard
 - Final comprehensive testing of all features
 - Create user documentation and guides
 
@@ -66,9 +77,14 @@
   - Logout button and toast notifications positioned for better usability
   - Date filtering with green outlined active state for better visibility
   - Consistent drawer behavior for all filter-related buttons
+  - Smooth animations throughout the app using Framer Motion
 - Real voice-to-text transcription using OpenAI is fully implemented and working.
 - DeepSeek poetry generation is fully implemented with personalized presentation.
-- Express server and Vite proxy configuration set up for secure API calls.
+- Vercel deployment configuration completed:
+  - Serverless function for poem generation
+  - API routes configured in vercel.json
+  - Environment variables documented
+  - Build process configured for Vercel
 - Application is ready for final testing and deployment.
 
 ## Known Issues
@@ -77,16 +93,25 @@
 
 ## Recently Resolved Issues
 
+- Deployment preparation:
+  - Created Vercel configuration file (vercel.json)
+  - Set up serverless function for poem generation
+  - Updated API routes for Vercel compatibility
+  - Added environment variable documentation
+  - Created deployment guide
+- Mobile UI improvements:
+  - Fixed button spacing in the New Entry modal for better mobile usability
+  - Simplified animations for better performance on mobile devices
+- Poem formatting issues:
+  - Updated DeepSeek system prompt to prevent markdown formatting in poems
+  - Added instructions to avoid using dashes and other AI-like formatting
+  - Ensured poems display in a natural, human-like style
 - Search functionality improvements:
   - Fixed search bar overlap with logo on mobile devices by hiding the logo when search is expanded
   - Implemented click-outside detection to close the search bar when clicking elsewhere on the page
   - Fixed search icon positioning to maintain consistent placement when search is closed
   - Improved search bar responsiveness on different screen sizes
 - Font implementation issue: Successfully changed poem font to Gloria Hallelujah, which provides a handwritten style that is both creative and readable.
-- Fixed Gorlea's signature position to be directly under the poem text instead of right-aligned to prevent it from being cut off by buttons.
-- Fixed date filtering logic to properly handle different time periods (Today, This Week, Last Month, Last Year).
-- Improved filter button styling with green outlines for active state to ensure text remains visible.
-- Fixed filter drawer behavior to close when any filter button is clicked (including "Clear Filter").
 - Current font configuration:
   - Main UI font: Nunito (working correctly)
   - Poem font: Gloria Hallelujah (working correctly)
