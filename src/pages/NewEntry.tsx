@@ -145,9 +145,9 @@ const NewEntry = () => {
         {/* Placeholder for AI Poem Generation */}
         {content && (
           <div className="mt-8 p-4 border border-primary/20 rounded-md bg-secondary/10">
-            <p className="text-primary-foreground/80 italic">
+            <p className="poem-text text-primary-foreground/80">
               When you save your entry, Gorlea will write a poem inspired by your words.
-              <span className="block text-right text-accent/80 text-sm mt-2">~ Gorlea</span>
+              <span className="block text-right text-accent/80 text-sm mt-2 font-poem">~ Gorlea</span>
             </p>
           </div>
         )}

@@ -10,6 +10,10 @@ export default {
   ],
   prefix: "",
   theme: {
+    fontFamily: {
+      sans: ['Nunito', 'sans-serif'],
+      poem: ['Caveat', 'cursive'],
+    },
     container: {
       center: true,
       padding: "2rem",

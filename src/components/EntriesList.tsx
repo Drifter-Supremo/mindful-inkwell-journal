@@ -181,10 +181,10 @@ const EntriesList = () => {
                   <div
                     className="mt-4 pt-4 border-t border-primary/20 animate-fade-in"
                   >
-                    <p className="text-primary-foreground/90 italic whitespace-pre-wrap">
+                    <p className="poem-text text-primary-foreground/90 whitespace-pre-wrap">
                       {entry.poem}
                       {entry.poem && (
-                        <span className="block text-right text-accent/80 text-sm mt-2">~ Gorlea</span>
+                        <span className="block text-right text-accent/80 text-sm mt-2 font-poem">~ Gorlea</span>
                       )}
                     </p>
                   </div>

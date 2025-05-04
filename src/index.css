@@ -9,22 +9,22 @@
     --primary: 210 50% 10%;
     --primary-foreground: 46 62% 87%;
     --accent: 35 100% 47%; /* Converted #F29600 to HSL */
-    
+
     --card: 210 50% 10%;
     --card-foreground: 46 62% 87%;
     --popover: 210 50% 10%;
     --popover-foreground: 46 62% 87%;
-    
+
     --secondary: 46 62% 87%;
     --secondary-foreground: 210 50% 10%;
-    
+
     --muted: 210 50% 15%;
     --muted-foreground: 46 62% 77%;
-    
+
     --border: 210 50% 10%;
     --input: 210 50% 20%;
     --ring: 210 50% 30%;
-    
+
     --radius: 0.5rem;
   }
 
@@ -72,6 +72,11 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+  }
+
+  /* Poem text styling */
+  .poem-text {
+    @apply font-poem text-lg leading-relaxed;
   }
 }
