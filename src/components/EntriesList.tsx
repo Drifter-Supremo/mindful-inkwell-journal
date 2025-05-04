@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
-import { Mic, MicOff, Plus, ChevronDown, ChevronUp, Trash } from "lucide-react";
+import { Mic, MicOff, Plus, ChevronDown, ChevronUp, Trash, FilterX } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/formatDate";
@@ -11,29 +11,44 @@ import { getEntries } from "../getEntries";
 import { saveEntry } from "../saveEntry";
 import { generatePoem } from "../generatePoem";
 import { useAuth } from "@/contexts/AuthContext";
-
+import { getDateRangeForFilter, isDateInRange } from "@/lib/dateFilters";
 
 import { deleteEntry } from "../deleteEntry";
 import DeleteEntryModal from "./DeleteEntryModal";
 
-const EntriesList = () => {
+type EntriesListProps = {
+  activeFilter: string | null;
+};
+
+const EntriesList = ({ activeFilter }: EntriesListProps) => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [entryToDelete, setEntryToDelete] = useState<string | null>(null);
   const [longPressTimeout, setLongPressTimeout] = useState<NodeJS.Timeout | null>(null);
 
   const [isRecording, setIsRecording] = useState(false);
-  const [entries, setEntries] = useState<any[]>([]);
+  const [allEntries, setAllEntries] = useState<any[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [expandedEntryId, setExpandedEntryId] = useState<string | null>(null);
   const { user } = useAuth();
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
 
+  // Fetch all entries when user or activeFilter changes
   useEffect(() => {
     if (user) {
-      getEntries(user.uid).then(setEntries);
+      getEntries(user.uid).then(setAllEntries);
     }
   }, [user]);
+
+  // Filter entries based on activeFilter
+  const filteredEntries = useMemo(() => {
+    if (!activeFilter) return allEntries;
+
+    const dateRange = getDateRangeForFilter(activeFilter);
+    if (!dateRange) return allEntries;
+
+    return allEntries.filter(entry => isDateInRange(entry.created_at, dateRange));
+  }, [allEntries, activeFilter]);
 
   // Removed simulated voice entry logic. Use NewEntry page for voice entries.
 
@@ -56,7 +71,7 @@ const EntriesList = () => {
     await saveEntry(content, poem, userId);
     // Refresh entries from Firestore
     const updatedEntries = await getEntries(userId);
-    setEntries(updatedEntries);
+    setAllEntries(updatedEntries);
   };
 
   const toggleExpandEntry = (id: string) => {
@@ -81,7 +96,18 @@ const EntriesList = () => {
   return (
     <div className="relative min-h-screen bg-primary p-4">
       <div className="grid gap-4 pb-20">
-        {entries.length === 0 ? (
+        {activeFilter && (
+          <div className="bg-secondary/30 rounded-lg p-3 mb-2 flex items-center justify-between border-[#4CAF50] border-2">
+            <div className="flex items-center">
+              <FilterX className="h-4 w-4 mr-2 text-primary-foreground/70" />
+              <span className="text-primary-foreground/90">Filtered by: {activeFilter}</span>
+            </div>
+            <span className="text-xs text-primary-foreground/60">
+              {filteredEntries.length} {filteredEntries.length === 1 ? 'entry' : 'entries'} found
+            </span>
+          </div>
+        )}
+        {allEntries.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-[50vh] text-center">
             <div className="max-w-md p-4">
               <p className="text-primary-foreground/90 text-xl mb-3">No journal entries yet</p>
@@ -90,8 +116,17 @@ const EntriesList = () => {
               </p>
             </div>
           </div>
+        ) : filteredEntries.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-[50vh] text-center">
+            <div className="max-w-md p-4">
+              <p className="text-primary-foreground/90 text-xl mb-3">No entries match your filter</p>
+              <p className="text-primary-foreground/70 text-sm">
+                Try a different filter or clear the current one
+              </p>
+            </div>
+          </div>
         ) : (
-          entries.map((entry) => {
+          filteredEntries.map((entry) => {
             const isExpanded = expandedEntryId === entry.id;
             const contentPreview = entry.content.length > 100 && !isExpanded
               ? `${entry.content.substring(0, 100)}...`
@@ -105,13 +140,13 @@ const EntriesList = () => {
                 await deleteEntry(entry.id, user.uid);
                 toast.success("Entry deleted.");
                 const updatedEntries = await getEntries(user.uid);
-                setEntries(updatedEntries);
+                setAllEntries(updatedEntries);
               }
             }
           };
 
           // Mobile long-press handlers
-          const handleLongPressStart = (e: React.TouchEvent) => {
+          const handleLongPressStart = (_e: React.TouchEvent) => {
             if (window.innerWidth < 768) { // Tailwind 'md' breakpoint
               setLongPressTimeout(setTimeout(() => {
                 setEntryToDelete(entry.id);
@@ -256,7 +291,7 @@ const EntriesList = () => {
                   await saveEntry(entryContent, poem, userId);
                   toast.success("Entry saved successfully!");
                   const updatedEntries = await getEntries(userId);
-                  setEntries(updatedEntries);
+                  setAllEntries(updatedEntries);
                 }
               } catch (err) {
                 toast.dismiss();
@@ -287,7 +322,7 @@ const EntriesList = () => {
             await deleteEntry(entryToDelete, user.uid);
             toast.success("Entry deleted.");
             const updatedEntries = await getEntries(user.uid);
-            setEntries(updatedEntries);
+            setAllEntries(updatedEntries);
           }
           setDeleteModalOpen(false);
         }}

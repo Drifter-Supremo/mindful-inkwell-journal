@@ -3,20 +3,22 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "./ui/sheet";
 import { Button } from "./ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { cn } from "@/lib/utils";
+import { CalendarDays, Calendar, CalendarClock, CalendarRange, X } from "lucide-react";
 
 type FilterDrawerProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  activeFilter: string | null;
+  setActiveFilter: (filter: string | null) => void;
 };
 
-const FilterDrawer = ({ open, onOpenChange }: FilterDrawerProps) => {
+const FilterDrawer = ({ open, onOpenChange, activeFilter, setActiveFilter }: FilterDrawerProps) => {
   const filters = [
-    { name: "Today", type: "date" },
-    { name: "This Week", type: "date" },
-    { name: "Happy", type: "mood" },
-    { name: "Reflective", type: "mood" },
-    { name: "Important", type: "tag" },
-    { name: "Personal", type: "tag" },
+    { name: "Today", type: "date", icon: <CalendarDays className="mr-2 h-4 w-4" /> },
+    { name: "This Week", type: "date", icon: <Calendar className="mr-2 h-4 w-4" /> },
+    { name: "Last Month", type: "date", icon: <CalendarClock className="mr-2 h-4 w-4" /> },
+    { name: "Last Year", type: "date", icon: <CalendarRange className="mr-2 h-4 w-4" /> },
   ];
 
   const { user, signOut } = useAuth();
@@ -24,6 +26,16 @@ const FilterDrawer = ({ open, onOpenChange }: FilterDrawerProps) => {
   const handleLogout = async () => {
     await signOut();
     onOpenChange(false);
+  };
+
+  const handleFilterClick = (filterName: string) => {
+    // If the filter is already active, clear it
+    if (activeFilter === filterName) {
+      setActiveFilter(null);
+    } else {
+      setActiveFilter(filterName);
+    }
+    onOpenChange(false); // Close drawer after selection
   };
 
   return (
@@ -49,12 +61,30 @@ const FilterDrawer = ({ open, onOpenChange }: FilterDrawerProps) => {
           <SheetTitle className="text-primary">Filters</SheetTitle>
         </SheetHeader>
         <div className="mt-4 flex flex-col gap-2 flex-1">
+          {activeFilter && (
+            <Button
+              variant="ghost"
+              className="justify-between text-primary mb-2 border-[#4CAF50] border-2 bg-transparent"
+              onClick={() => {
+                setActiveFilter(null);
+                onOpenChange(false); // Close drawer after clearing filter
+              }}
+            >
+              <span>Clear Filter: {activeFilter}</span>
+              <X className="h-4 w-4 ml-2" />
+            </Button>
+          )}
           {filters.map((filter) => (
             <Button
               key={filter.name}
               variant="ghost"
-              className="justify-start text-primary hover:bg-primary hover:text-white"
+              className={cn(
+                "justify-start text-primary",
+                activeFilter === filter.name && "border-[#4CAF50] border-2 bg-transparent"
+              )}
+              onClick={() => handleFilterClick(filter.name)}
             >
+              {filter.icon}
               {filter.name}
             </Button>
           ))}
