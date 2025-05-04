@@ -79,4 +79,15 @@
   .poem-text {
     @apply font-poem text-lg leading-relaxed;
   }
+
+  /* Animation for highlighting search results */
+  @keyframes highlight-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(242, 150, 0, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(242, 150, 0, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(242, 150, 0, 0); }
+  }
+
+  .highlight-pulse {
+    animation: highlight-pulse 1.5s ease-in-out 2;
+  }
 }

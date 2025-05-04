@@ -6,11 +6,12 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/formatDate";
 import NewEntryModal from "./NewEntryModal";
+import { motion } from "framer-motion";
 
-import { getEntries } from "../getEntries";
 import { saveEntry } from "../saveEntry";
 import { generatePoem } from "../generatePoem";
 import { useAuth } from "@/contexts/AuthContext";
+import { useSearch } from "@/contexts/SearchContext";
 import { getDateRangeForFilter, isDateInRange } from "@/lib/dateFilters";
 
 import { deleteEntry } from "../deleteEntry";
@@ -26,19 +27,53 @@ const EntriesList = ({ activeFilter }: EntriesListProps) => {
   const [longPressTimeout, setLongPressTimeout] = useState<NodeJS.Timeout | null>(null);
 
   const [isRecording, setIsRecording] = useState(false);
-  const [allEntries, setAllEntries] = useState<any[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const [expandedEntryId, setExpandedEntryId] = useState<string | null>(null);
   const { user } = useAuth();
+  const {
+    allEntries,
+    refreshEntries,
+    selectedEntryId,
+    setSelectedEntryId
+  } = useSearch();
+  const [expandedEntryId, setExpandedEntryId] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
+  // Removed unused ref
 
-  // Fetch all entries when user or activeFilter changes
+  // Fetch all entries when user changes
   useEffect(() => {
     if (user) {
-      getEntries(user.uid).then(setAllEntries);
+      refreshEntries();
     }
-  }, [user]);
+  }, [user, refreshEntries]);
+
+  // Handle selected entry from search
+  useEffect(() => {
+    if (selectedEntryId) {
+      setExpandedEntryId(selectedEntryId);
+      // Scroll to the selected entry with a slight delay to ensure rendering
+      setTimeout(() => {
+        const element = document.getElementById(`entry-${selectedEntryId}`);
+        if (element) {
+          // Scroll with animation
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+          // Add a temporary highlight animation class
+          element.classList.add('highlight-pulse');
+
+          // Remove the highlight class after animation completes
+          setTimeout(() => {
+            element.classList.remove('highlight-pulse');
+          }, 2000);
+        }
+      }, 100);
+
+      // Clear the selected entry ID after a delay to allow for future selections of the same entry
+      setTimeout(() => {
+        setSelectedEntryId(null);
+      }, 3000);
+    }
+  }, [selectedEntryId, setSelectedEntryId]);
 
   // Filter entries based on activeFilter
   const filteredEntries = useMemo(() => {
@@ -70,8 +105,7 @@ const EntriesList = ({ activeFilter }: EntriesListProps) => {
     const userId = user.uid;
     await saveEntry(content, poem, userId);
     // Refresh entries from Firestore
-    const updatedEntries = await getEntries(userId);
-    setAllEntries(updatedEntries);
+    await refreshEntries();
   };
 
   const toggleExpandEntry = (id: string) => {
@@ -139,8 +173,7 @@ const EntriesList = ({ activeFilter }: EntriesListProps) => {
               if (user) {
                 await deleteEntry(entry.id, user.uid);
                 toast.success("Entry deleted.");
-                const updatedEntries = await getEntries(user.uid);
-                setAllEntries(updatedEntries);
+                await refreshEntries();
               }
             }
           };
@@ -160,8 +193,22 @@ const EntriesList = ({ activeFilter }: EntriesListProps) => {
 
 
           return (
-            <Card
+            <motion.div
               key={entry.id}
+              id={`entry-${entry.id}`}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                scale: selectedEntryId === entry.id ? 1.02 : 1
+              }}
+              transition={{ duration: 0.3 }}
+              className={cn(
+                "transition-all duration-500",
+                selectedEntryId === entry.id && "ring-2 ring-accent shadow-lg shadow-accent/30"
+              )}
+            >
+            <Card
               className={cn(
                 "bg-secondary/20 border-primary/20 transition-all duration-300",
                 isExpanded ? "shadow-md" : ""
@@ -230,6 +277,7 @@ const EntriesList = ({ activeFilter }: EntriesListProps) => {
                 </p>
               </CardContent>
             </Card>
+            </motion.div>
           );
         })
         )}
@@ -290,8 +338,7 @@ const EntriesList = ({ activeFilter }: EntriesListProps) => {
                   const userId = user.uid;
                   await saveEntry(entryContent, poem, userId);
                   toast.success("Entry saved successfully!");
-                  const updatedEntries = await getEntries(userId);
-                  setAllEntries(updatedEntries);
+                  await refreshEntries();
                 }
               } catch (err) {
                 toast.dismiss();
@@ -321,8 +368,7 @@ const EntriesList = ({ activeFilter }: EntriesListProps) => {
           if (entryToDelete && user) {
             await deleteEntry(entryToDelete, user.uid);
             toast.success("Entry deleted.");
-            const updatedEntries = await getEntries(user.uid);
-            setAllEntries(updatedEntries);
+            await refreshEntries();
           }
           setDeleteModalOpen(false);
         }}

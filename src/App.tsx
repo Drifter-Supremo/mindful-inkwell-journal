@@ -8,6 +8,7 @@ import NewEntry from "./pages/NewEntry";
 import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth"; // Import the Auth page
 import { AuthProvider, useAuth } from "@/contexts/AuthContext"; // Import useAuth
+import { SearchProvider } from "@/contexts/SearchContext"; // Import SearchProvider
 
 // ProtectedRoute component to redirect unauthenticated users
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
@@ -23,29 +24,31 @@ const App = () => (
     <Toaster />
     <Sonner />
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Navigate to="/entries" replace />} />
-          <Route path="/auth" element={<Auth />} /> {/* Add route for Auth page */}
-          <Route
-            path="/entries"
-            element={
-              <ProtectedRoute>
-                <Entries />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/new"
-            element={
-              <ProtectedRoute>
-                <NewEntry />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <SearchProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Navigate to="/entries" replace />} />
+            <Route path="/auth" element={<Auth />} /> {/* Add route for Auth page */}
+            <Route
+              path="/entries"
+              element={
+                <ProtectedRoute>
+                  <Entries />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/new"
+              element={
+                <ProtectedRoute>
+                  <NewEntry />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </SearchProvider>
     </AuthProvider>
   </TooltipProvider>
 );
