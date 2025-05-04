@@ -351,6 +351,8 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
 - [x] Test voice recording and transcription.
 - [x] Integrate DeepSeek API for poetry generation and display.
 - [x] Personalize poem display with Gorlea signature.
+- [x] Implement chronological sorting of entries with newest first.
+- [x] Add smart date formatting (relative for recent entries, date format for older entries).
 - [x] Verify Google Sign-In and data security.
 - [ ] Check deployed site functionality.
 

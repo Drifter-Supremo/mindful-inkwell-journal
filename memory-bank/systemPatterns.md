@@ -37,7 +37,7 @@
 
 ## Component Relationships
 
-- **EntriesList.tsx:** Displays all journal entries for the authenticated user, triggers new entry creation. The microphone button captures real voice entries, transcribes them using OpenAI, persists them to Firestore, and refreshes the list. Poems are displayed with a personal Gorlea signature.
+- **EntriesList.tsx:** Displays all journal entries for the authenticated user sorted by date (newest first), triggers new entry creation. The microphone button captures real voice entries, transcribes them using OpenAI, persists them to Firestore, and refreshes the list. Poems are displayed with a personal Gorlea signature. Smart date formatting shows relative time for recent entries and date format for older entries.
 - **NewEntryModal.tsx:** Handles text entry creation with validation and feedback.
 - **NewEntry.tsx:** Manages both text and voice input, integrates with AI for transcription and poetry. Includes a preview of how Gorlea will respond to journal entries.
 - **FilterDrawer.tsx:** Provides filter options and a persistent "Log Out" button for authenticated users.

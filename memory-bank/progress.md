@@ -2,6 +2,10 @@
 
 ## Completed
 
+- Journal entries display improvements
+  - Entries now sorted chronologically with newest first
+  - Smart date formatting (relative time for recent entries, date format for older entries)
+  - Added Firestore index for efficient sorting
 - DeepSeek poetry generation fully integrated
   - Secure backend API endpoint via Express
   - Vite proxy setup for local development

@@ -2,9 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
 import { Mic, MicOff, Plus, ChevronDown, ChevronUp, Trash } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { formatDate } from "@/lib/formatDate";
 import NewEntryModal from "./NewEntryModal";
 
 import { getEntries } from "../getEntries";
@@ -181,7 +181,7 @@ const EntriesList = () => {
                 )}
 
                 <p className="mt-3 text-sm text-primary-foreground/60">
-                  {formatDistanceToNow(new Date(entry.created_at), { addSuffix: true })}
+                  {formatDate(entry.created_at)}
                 </p>
               </CardContent>
             </Card>

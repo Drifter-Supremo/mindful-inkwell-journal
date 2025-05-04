@@ -12,6 +12,10 @@
 
 ## Recent Changes
 
+- Improved journal entries display:
+  - Implemented chronological sorting with newest entries first
+  - Created smart date formatting (relative time for recent entries, date format for older entries)
+  - Added Firestore index for efficient sorting
 - Fixed DeepSeek poetry generation by configuring Express server and Vite proxy correctly.
 - Personalized poem presentation by removing "AI-Generated Poem" label.
 - Added Gorlea signature to poems for a more personal touch.

@@ -40,10 +40,10 @@ The AI Journal is a React-based web application that allows users to create jour
 ### Key Components
 
 #### `EntriesList.tsx`
-Displays all journal entries in collapsible card format. Features:
+Displays all journal entries in collapsible card format, sorted by date with newest first. Features:
 - Toggle expansion of entries
-- AI-generated poem section
-- Timestamp display
+- AI-generated poem section with Gorlea signature
+- Smart timestamp display (relative time for recent entries, date format for older entries)
 - Floating action buttons for new text entry and voice recording
 
 #### `NewEntryModal.tsx`
@@ -183,6 +183,19 @@ VITE_DEEPSEEK_API_KEY=your_deepseek_api_key
 ```
 
 Replace the placeholder values with your actual API keys.
+
+### Setting Up Firestore Indexes
+
+For chronological sorting of entries, create a composite index in Firebase:
+
+1. Go to your Firebase console > Firestore Database > Indexes
+2. Add a composite index with:
+   - Collection: `entries`
+   - Fields:
+     - `userId` (Ascending)
+     - `created_at` (Descending)
+   - Query scope: Collection
+3. This enables sorting entries by date with newest first
 
 ## Deployment
 
