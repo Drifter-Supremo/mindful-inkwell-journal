@@ -2,6 +2,12 @@
 
 ## Completed
 
+- UI Improvements
+  - Renamed app from "Mindful Inkwell" to "Gorlea's Ink" throughout the application
+  - Added Gorlea logo to the AppBar and login page
+  - Enhanced Google sign-in button with official Google colors and logo
+  - Added a clean, minimal "no journal entries yet" message when user has no entries
+  - Improved login page with larger, more dynamic logo
 - Journal entries display improvements
   - Entries now sorted chronologically with newest first
   - Smart date formatting (relative time for recent entries, date format for older entries)
@@ -42,7 +48,12 @@
 - MVP setup, Firebase integration, authentication, and Firestore data functions/UI integration are complete.
 - Secure credential management in place.
 - All journal entry operations are now securely scoped to the authenticated user.
-- UI/UX improvements implemented for logout and toast notifications.
+- UI/UX improvements implemented:
+  - App renamed to "Gorlea's Ink" with logo added to AppBar and login page
+  - Google sign-in button enhanced with official colors and logo
+  - Empty state message added for when user has no journal entries
+  - Login page improved with larger, more dynamic logo
+  - Logout button and toast notifications positioned for better usability
 - Real voice-to-text transcription using OpenAI is fully implemented and working.
 - DeepSeek poetry generation is fully implemented with personalized presentation.
 - Express server and Vite proxy configuration set up for secure API calls.

@@ -21,9 +21,11 @@
 - **Simple State Management:** Uses React's `useState` for local state; may consider more advanced solutions as complexity grows.
 - **Component-Driven UI:** Core features are encapsulated in modular components (EntriesList, NewEntryModal, NewEntry).
 - **Collapsible Entry Cards:** Entries are displayed in collapsible cards for clarity and organization.
+- **Empty State Handling:** Clean, minimal "no journal entries yet" message when user has no entries.
 - **Floating Action Buttons:** Used for quick access to new entry creation.
 - **Responsive Design:** Tailwind CSS ensures the UI adapts to all screen sizes.
-- **Authentication:** Google Sign-In via Firebase Auth for secure, user-friendly login. All authentication and user state is managed via Firebase; Supabase has been fully removed.
+- **Branding:** App renamed to "Gorlea's Ink" with logo displayed in AppBar and login page.
+- **Authentication:** Google Sign-In via Firebase Auth with official Google colors and logo for secure, user-friendly login. All authentication and user state is managed via Firebase; Supabase has been fully removed.
 - **User Data Scoping:** All Firestore entry operations (save, fetch) are scoped to the authenticated user's `uid`.
 - **Logout Accessibility:** A "Log Out" button is always available in the FilterDrawer for authenticated users.
 - **Toast Placement:** Toast notifications are positioned in the top-right to avoid UI overlap.
@@ -37,7 +39,7 @@
 
 ## Component Relationships
 
-- **EntriesList.tsx:** Displays all journal entries for the authenticated user sorted by date (newest first), triggers new entry creation. The microphone button captures real voice entries, transcribes them using OpenAI, persists them to Firestore, and refreshes the list. Poems are displayed with a personal Gorlea signature. Smart date formatting shows relative time for recent entries and date format for older entries.
+- **EntriesList.tsx:** Displays all journal entries for the authenticated user sorted by date (newest first), triggers new entry creation. Shows a clean, minimal "no journal entries yet" message when the user has no entries. The microphone button captures real voice entries, transcribes them using OpenAI, persists them to Firestore, and refreshes the list. Poems are displayed with a personal Gorlea signature. Smart date formatting shows relative time for recent entries and date format for older entries.
 - **NewEntryModal.tsx:** Handles text entry creation with validation and feedback.
 - **NewEntry.tsx:** Manages both text and voice input, integrates with AI for transcription and poetry. Includes a preview of how Gorlea will respond to journal entries.
 - **FilterDrawer.tsx:** Provides filter options and a persistent "Log Out" button for authenticated users.

@@ -12,6 +12,12 @@
 
 ## Recent Changes
 
+- UI Improvements:
+  - Renamed app from "Mindful Inkwell" to "Gorlea's Ink" throughout the application
+  - Added Gorlea logo to the AppBar and login page
+  - Enhanced Google sign-in button with official Google colors and logo
+  - Added a clean, minimal "no journal entries yet" message when user has no entries
+  - Improved login page with larger, more dynamic logo
 - Improved journal entries display:
   - Implemented chronological sorting with newest entries first
   - Created smart date formatting (relative time for recent entries, date format for older entries)
