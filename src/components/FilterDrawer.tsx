@@ -2,6 +2,7 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "./ui/sheet";
 import { Button } from "./ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 type FilterDrawerProps = {
   open: boolean;
@@ -18,7 +19,7 @@ const FilterDrawer = ({ open, onOpenChange }: FilterDrawerProps) => {
     { name: "Personal", type: "tag" },
   ];
 
-  const { signOut } = useAuth();
+  const { user, signOut } = useAuth();
 
   const handleLogout = async () => {
     await signOut();
@@ -28,6 +29,22 @@ const FilterDrawer = ({ open, onOpenChange }: FilterDrawerProps) => {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="left" className="w-[280px] bg-secondary flex flex-col h-full">
+        {user && (
+          <div className="py-4 border-b border-primary/10 mb-2">
+            <div className="flex items-center gap-3">
+              <Avatar className="h-12 w-12 border-2 border-primary/20">
+                <AvatarImage src={user.photoURL || ''} alt={user.displayName || 'User'} />
+                <AvatarFallback className="bg-primary/10 text-primary">
+                  {user.displayName ? user.displayName.charAt(0).toUpperCase() : 'U'}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col">
+                <span className="font-medium text-primary">{user.displayName}</span>
+                <span className="text-xs text-primary/60">{user.email}</span>
+              </div>
+            </div>
+          </div>
+        )}
         <SheetHeader>
           <SheetTitle className="text-primary">Filters</SheetTitle>
         </SheetHeader>
