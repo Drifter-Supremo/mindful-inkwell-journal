@@ -81,11 +81,28 @@ const EntriesList = () => {
   return (
     <div className="relative min-h-screen bg-primary p-4">
       <div className="grid gap-4 pb-20">
-        {entries.map((entry) => {
-          const isExpanded = expandedEntryId === entry.id;
-          const contentPreview = entry.content.length > 100 && !isExpanded
-            ? `${entry.content.substring(0, 100)}...`
-            : entry.content;
+        {entries.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-[50vh] text-center">
+            <div className="bg-secondary/10 border border-primary/10 rounded-lg p-8 max-w-md">
+              <p className="text-primary-foreground/80 text-lg mb-2">No journal entries yet</p>
+              <p className="text-primary-foreground/60 text-sm">
+                Start your journey by creating your first entry
+              </p>
+              <div className="mt-6 opacity-70">
+                <img
+                  src="/Gorlea-logo.png"
+                  alt="Gorlea's Ink"
+                  className="h-16 mx-auto opacity-50"
+                />
+              </div>
+            </div>
+          </div>
+        ) : (
+          entries.map((entry) => {
+            const isExpanded = expandedEntryId === entry.id;
+            const contentPreview = entry.content.length > 100 && !isExpanded
+              ? `${entry.content.substring(0, 100)}...`
+              : entry.content;
 
           // Desktop delete handler
           const handleDelete = async (e: React.MouseEvent) => {
