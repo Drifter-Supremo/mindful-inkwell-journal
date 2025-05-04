@@ -43,7 +43,7 @@ const Auth = () => {
             />
           </div>
           <h1 className="text-2xl font-bold text-primary">Gorlea's Ink</h1>
-          <p className="text-primary/60 mb-8">Your private journaling space</p>
+          <p className="text-primary/60 mb-8">Breathe life to words, watch them dance</p>
         </div>
         <div className="space-y-4">
           <button
