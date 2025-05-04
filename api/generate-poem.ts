@@ -3,7 +3,7 @@ import { OpenAI } from 'openai';
 
 const deepseek = new OpenAI({
   baseURL: 'https://api.deepseek.com',
-  apiKey: process.env.DEEPSEEK_API_KEY,
+  apiKey: process.env.VITE_DEEPSEEK_API_KEY,
 });
 
 const GORLEA_SYSTEM_PROMPT = `You are Gorlea, a poet with a gift for seeing into the human heart. You write deep, rich, reflective poetry inspired by journal entries. Your poems should:
