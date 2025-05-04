@@ -9,6 +9,7 @@ The AI Journal is a React-based web application that allows users to create jour
 
 ## Tech Stack
 
+### Frontend
 - **React**: Frontend library for building user interfaces
 - **TypeScript**: Static type checking
 - **Tailwind CSS**: Utility-first CSS framework for styling
@@ -18,12 +19,23 @@ The AI Journal is a React-based web application that allows users to create jour
 - **date-fns**: Date manipulation library
 - **Sonner**: Toast notification system
 
+### Backend
+- **Express**: Node.js web application framework for the API server
+- **Firebase**: Authentication and Firestore database for data storage
+- **DeepSeek AI**: AI service for generating poetry based on journal entries
+- **OpenAI**: AI service for speech-to-text transcription
+
 ## Architecture
 
 ### Main Pages
 
 - **`/entries`**: Displays all journal entries with collapsible cards
 - **`/new`**: Page for creating a new journal entry with text input and voice recording option
+
+### Backend Services
+
+- **Express Server**: Runs on port 3001 and provides the `/api/generate-poem` endpoint for DeepSeek AI poem generation
+- **Vite Dev Server**: Runs on port 8080 and serves the React frontend
 
 ### Key Components
 
@@ -65,14 +77,15 @@ The frontend currently includes UI for voice recording but uses placeholder func
 Two main integration points for AI:
 
 1. **Voice-to-Text Transcription**:
-   - When a voice recording is completed, send the audio file to your backend
-   - Process with a speech-to-text AI model
-   - Return the transcribed text to populate the journal entry
+   - When a voice recording is completed, the audio file is sent to OpenAI's API
+   - OpenAI's GPT-4o-mini model transcribes the audio to text
+   - The transcribed text populates the journal entry
 
 2. **Poem Generation**:
-   - When a journal entry is saved (either text or transcribed voice), send the content to your backend
-   - Process with your poem-generation AI model
-   - Return the generated poem to be displayed alongside the journal entry
+   - When a journal entry is saved, the content is sent to the `/api/generate-poem` endpoint
+   - The Express server forwards the request to DeepSeek's API with the system prompt for Gorlea (the AI poet)
+   - DeepSeek generates a poem based on the journal entry
+   - The poem is returned and displayed alongside the journal entry
 
 ### Data Persistence
 
@@ -138,9 +151,38 @@ To run the project locally:
 # Install dependencies
 npm install
 
-# Start development server
+# Start development server only (without poem generation)
 npm run dev
+
+# Start Express server only (for poem generation API)
+npm run server
+
+# Start both servers together (recommended)
+npm run dev:full
 ```
+
+### Setting Up Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```
+# Firebase Configuration
+VITE_FIREBASE_API_KEY=your_firebase_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
+VITE_FIREBASE_PROJECT_ID=your_firebase_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_firebase_storage_bucket
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_firebase_messaging_sender_id
+VITE_FIREBASE_APP_ID=your_firebase_app_id
+VITE_FIREBASE_MEASUREMENT_ID=your_firebase_measurement_id
+
+# OpenAI API Key
+VITE_OPENAI_API_KEY=your_openai_api_key
+
+# DeepSeek API Key
+VITE_DEEPSEEK_API_KEY=your_deepseek_api_key
+```
+
+Replace the placeholder values with your actual API keys.
 
 ## Deployment
 
