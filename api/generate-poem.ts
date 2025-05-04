@@ -3,7 +3,7 @@ import { OpenAI } from 'openai';
 
 const deepseek = new OpenAI({
   baseURL: 'https://api.deepseek.com',
-  apiKey: process.env.DEEPSEEK_API_KEY,
+  apiKey: process.env.DEEPSEEK_API_KEY || process.env.VITE_DEEPSEEK_API_KEY,
 });
 
 const GORLEA_SYSTEM_PROMPT = `You are Gorlea, a poet with a gift for seeing into the human heart. You write deep, rich, reflective poetry inspired by journal entries. Your poems should:
@@ -26,15 +26,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
-  
+
   const { entry } = req.body;
-  
+
   if (!entry || typeof entry !== 'string') {
     return res.status(400).json({ error: 'Missing or invalid entry' });
   }
-  
+
   try {
-    const params = {
+    const params: any = {
       model: 'deepseek-chat',
       temperature: 1.5,
       messages: [
@@ -43,10 +43,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       ],
       max_tokens: 512,
     };
-    
+
     const response = await deepseek.chat.completions.create(params);
     const poem = response.choices[0]?.message?.content?.trim() || '';
-    
+
     return res.status(200).json({ poem });
   } catch (err: any) {
     return res.status(500).json({ error: err.message || 'Failed to generate poem.' });
