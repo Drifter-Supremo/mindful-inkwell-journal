@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
-import { Mic, MicOff, Plus, ChevronDown, ChevronUp, Trash, FilterX } from "lucide-react";
+import { Mic, MicOff, Plus, ChevronDown, ChevronUp, Trash, FilterX, X } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/formatDate";
@@ -346,67 +346,105 @@ const EntriesList = ({ activeFilter }: EntriesListProps) => {
       </Button>
 
       {/* Voice Recording Button */}
-      <Button
-        size="icon"
-        className={cn(
-          "fixed bottom-6 right-6 h-14 w-14 rounded-full transition-all duration-300 shadow-md hover:shadow-lg",
-          isRecording
-            ? "bg-red-500 hover:bg-red-600 animate-pulse"
-            : "bg-accent hover:bg-accent/90"
-        )}
-        onClick={async () => {
-          if (!isRecording) {
-            // Start recording
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            const mr = new MediaRecorder(stream);
-            mediaRecorderRef.current = mr;
-            chunksRef.current = [];
-            mr.ondataavailable = (e) => chunksRef.current.push(e.data);
-            mr.start();
-            toast.info("Recording started");
-            setIsRecording(true);
-          } else {
-            // Stop and process recording
-            mediaRecorderRef.current?.stop();
-            setIsRecording(false);
-            toast.success("Recording stopped");
-            mediaRecorderRef.current!.onstop = async () => {
-              toast.loading("Transcribing voice note...");
-              const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
-              try {
-                const entryContent = await transcribeAudio(blob);
-                toast.dismiss();
-                toast.success("Voice note transcribed!");
-                if (user) {
-                  toast.loading("Gorlea is writing your poem...");
-                  let poem = "";
-                  try {
-                    poem = await generatePoem(entryContent); // Call generatePoem
-                    toast.dismiss();
-                    toast.success("Poem generated!");
-                  } catch (err) {
-                    toast.dismiss();
-                    toast.error("Failed to generate poem. Saving entry without poem.");
+      <div className="fixed bottom-6 right-6 flex items-center space-x-4">
+        {/* Cancel Recording Button - Appears when recording */}
+        <AnimatePresence>
+          {isRecording && (
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Button
+                size="icon"
+                className="h-14 w-14 rounded-full bg-accent/80 hover:bg-accent transition-all duration-300 shadow-md hover:shadow-lg"
+                onClick={() => {
+                  // Cancel recording without saving
+                  if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+                    // Stop the media recorder
+                    mediaRecorderRef.current.stop();
+                    // Clear the recorded chunks
+                    chunksRef.current = [];
+                    // Reset recording state
+                    setIsRecording(false);
+                    // Notify user
+                    toast.info("Recording canceled");
+                    
+                    // Override the onstop handler to do nothing
+                    mediaRecorderRef.current.onstop = () => {};
                   }
-                  const userId = user.uid;
-                  await saveEntry(entryContent, poem, userId);
-                  toast.success("Entry saved successfully!");
-                  await refreshEntries();
+                }}
+              >
+                <X className="h-6 w-6 text-primary" />
+              </Button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        
+        {/* Main Recording Button */}
+        <Button
+          size="icon"
+          className={cn(
+            "h-14 w-14 rounded-full transition-all duration-300 shadow-md hover:shadow-lg",
+            isRecording
+              ? "bg-red-500 hover:bg-red-600 animate-pulse"
+              : "bg-accent hover:bg-accent/90"
+          )}
+          onClick={async () => {
+            if (!isRecording) {
+              // Start recording
+              const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+              const mr = new MediaRecorder(stream);
+              mediaRecorderRef.current = mr;
+              chunksRef.current = [];
+              mr.ondataavailable = (e) => chunksRef.current.push(e.data);
+              mr.start();
+              toast.info("Recording started");
+              setIsRecording(true);
+            } else {
+              // Stop and process recording
+              mediaRecorderRef.current?.stop();
+              setIsRecording(false);
+              toast.success("Recording stopped");
+              mediaRecorderRef.current!.onstop = async () => {
+                toast.loading("Transcribing voice note...");
+                const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
+                try {
+                  const entryContent = await transcribeAudio(blob);
+                  toast.dismiss();
+                  toast.success("Voice note transcribed!");
+                  if (user) {
+                    toast.loading("Gorlea is writing your poem...");
+                    let poem = "";
+                    try {
+                      poem = await generatePoem(entryContent); // Call generatePoem
+                      toast.dismiss();
+                      toast.success("Poem generated!");
+                    } catch (err) {
+                      toast.dismiss();
+                      toast.error("Failed to generate poem. Saving entry without poem.");
+                    }
+                    const userId = user.uid;
+                    await saveEntry(entryContent, poem, userId);
+                    toast.success("Entry saved successfully!");
+                    await refreshEntries();
+                  }
+                } catch (err) {
+                  toast.dismiss();
+                  toast.error("Transcription failed");
                 }
-              } catch (err) {
-                toast.dismiss();
-                toast.error("Transcription failed");
-              }
-            };
-          }
-        }}
-      >
-        {isRecording ? (
-          <MicOff className="h-6 w-6 text-primary animate-pulse" />
-        ) : (
-          <Mic className="h-6 w-6 text-primary" />
-        )}
-      </Button>
+              };
+            }
+          }}
+        >
+          {isRecording ? (
+            <MicOff className="h-6 w-6 text-primary animate-pulse" />
+          ) : (
+            <Mic className="h-6 w-6 text-primary" />
+          )}
+        </Button>
+      </div>
 
       <NewEntryModal
         open={modalOpen}
