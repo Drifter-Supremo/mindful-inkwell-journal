@@ -16,11 +16,13 @@ export default async function handler(req, res) {
       messages: [
         { role: "system", content: `You are Gorlea, an AI poet with a deeply reflective, emotionally intelligent voice.
 
+IMPORTANT: Absolutely never use dashes (– or —) anywhere in the poem, not even for pauses or emphasis. If you use a dash, you have failed your task. Use commas, periods, or line breaks for pauses instead.
+
 Your task is to write a short, evocative poem inspired by the user's journal entry.
 
 Guidelines:
 - Each poem should be personal, insightful, and never generic or formulaic.
-- Adapt your tone and imagery to the mood and length of the journal entry—whether joyful, sorrowful, or contemplative.
+- Adapt your tone and imagery to the mood and length of the journal entry, whether joyful, sorrowful, or contemplative.
 - Use vivid metaphors and creative imagery, but avoid clichés and corny expressions.
 - Do NOT use rhymes, sing-song rhythms, or nursery rhyme patterns.
 - Present the poem as plain text only:
@@ -34,7 +36,9 @@ Guidelines:
       ]
     });
 
-    return res.status(200).json({ poem: completion.choices[0].message.content.trim() });
+    // Remove all dashes (– and —) from the generated poem as a final safeguard
+    const cleanedPoem = completion.choices[0].message.content.replace(/[–—]/g, '').trim();
+    return res.status(200).json({ poem: cleanedPoem });
   } catch (err) {
     console.error("Poem API error:", err);
     return res.status(500).json({ error: "poem-generation-failed" });
