@@ -378,11 +378,11 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
 - [x] Create deployment guide (DEPLOYMENT.md)
 
 ### 7.2 Deploy to Vercel
-- [ ] Push changes to GitHub repository
-- [ ] Connect repository to Vercel
-- [ ] Configure environment variables in Vercel dashboard
-- [ ] Deploy the application
-- [ ] Verify the app at the Vercel-provided URL
+- [x] Push changes to GitHub repository
+- [x] Connect repository to Vercel
+- [x] Configure environment variables in Vercel dashboard
+- [x] Deploy the application
+- [x] Verify the app at the Vercel-provided URL
 
 ---
 
@@ -400,10 +400,10 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
 - [x] Test mobile UI improvements (button spacing, animations).
 - [x] Verify poem formatting is natural and human-like.
 - [x] Test serverless function for poem generation locally.
-- [ ] Check deployed site functionality on Vercel.
+- [x] Check deployed site functionality on Vercel.
 
 ### 8.2 Fix Issues
-- [ ] Debug and resolve any errors encountered.
+- [x] Debug and resolve any errors encountered.
 
 ---
 
@@ -416,7 +416,7 @@ A weekend project to create a journal app with voice-to-text and AI-generated po
 - [x] Mobile UI is optimized with proper spacing and animations.
 - [x] Poem formatting is natural and human-like (no markdown or dashes).
 - [x] Vercel deployment configuration is complete.
-- [ ] App runs smoothly on Vercel.
+- [x] App runs smoothly on Vercel.
 
 ---
 

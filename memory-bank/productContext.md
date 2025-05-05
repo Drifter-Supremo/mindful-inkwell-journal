@@ -2,7 +2,7 @@
 
 ## Why This Project Exists
 
-Gorlea's Ink (formerly Mindful Inkwell) is designed to make journaling accessible, enjoyable, and creative for everyone. It addresses the challenge of maintaining a regular journaling habit by blending traditional writing with modern AI-powered features, making the process both simple and engaging.
+Gorlea Dot Ink (formerly Mindful Inkwell) is designed to make journaling accessible, enjoyable, and creative for everyone. It addresses the challenge of maintaining a regular journaling habit by blending traditional writing with modern AI-powered features, making the process both simple and engaging.
 
 ## Problems It Solves
 
@@ -23,11 +23,13 @@ Gorlea's Ink (formerly Mindful Inkwell) is designed to make journaling accessibl
 ## User Experience Goals
 
 - **Simplicity:** Minimalist, intuitive UI that encourages frequent use, with clean empty states and clear guidance.
-- **Branding:** Consistent use of Gorlea's Ink branding and logo throughout the application.
+- **Branding:** Consistent use of Gorlea Dot Ink branding and logo throughout the application.
 - **Creativity:** AI features that add value and delight, such as poetry generation and entry polishing.
 - **Accessibility:** Support for both text and voice input, with simulated voice entries now persisting like manual entries; responsive design for all devices.
 - **Filtering:** Date-based filters (Today, This Week, Last Month, Last Year) with green outlined buttons for active state and proper date range filtering.
 - **Feedback:** Real-time notifications and visual cues for actions like saving, recording, filtering, and errors.
 - **Security:** User authentication via Google Sign-In with official Google colors and logo to protect privacy and data.
+- **Content Management:** Journal entries are limited to 3,000 characters with a visual counter, and voice recordings are limited to 1 minute with an animated countdown timer to prevent system overload while maintaining a generous limit for expression.
+- **Intuitive Controls:** The "Add Entry" button is disabled during voice recording to prevent conflicting actions and user confusion.
 
-Gorlea's Ink aims to foster mindfulness, creativity, and consistency in journaling through a seamless blend of classic and modern technology.
+Gorlea Dot Ink aims to foster mindfulness, creativity, and consistency in journaling through a seamless blend of classic and modern technology.

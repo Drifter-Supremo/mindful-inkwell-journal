@@ -5,7 +5,7 @@
 - **Frontend:** Built with React (Vite, TypeScript, Tailwind CSS, shadcn/ui, Lucide React, React Router).
 - **Backend:** Firebase (Firestore for data storage, Firebase Auth for authentication; Supabase is no longer used).
 - **AI Services:** OpenAI GPT-4o-mini for speech-to-text (real voice-to-text transcription now live), GPT-4.1-mini for entry enhancement and poetry generation.
-- **Voice Recording:** RecordRTC for capturing audio, integrated with OpenAI transcription. Voice entries (via the microphone button in EntriesList) are now transcribed, saved to Firestore, and behave like manual entries.
+- **Voice Recording:** RecordRTC for capturing audio, integrated with OpenAI transcription. Voice entries (via the microphone button in EntriesList) are now transcribed, saved to Firestore, and behave like manual entries. Voice recordings are limited to 1 minute with an animated countdown timer.
 
 ## Secure AI API Integration
 
@@ -24,12 +24,14 @@
 - **Empty State Handling:** Clean, minimal "no journal entries yet" message when user has no entries.
 - **Floating Action Buttons:** Used for quick access to new entry creation.
 - **Responsive Design:** Tailwind CSS ensures the UI adapts to all screen sizes.
-- **Branding:** App renamed to "Gorlea's Ink" with logo displayed in AppBar and login page.
+- **Branding:** App renamed to "Gorlea Dot Ink" with logo displayed in AppBar and login page.
 - **Authentication:** Google Sign-In via Firebase Auth with official Google colors and logo for secure, user-friendly login. All authentication and user state is managed via Firebase; Supabase has been fully removed.
 - **User Data Scoping:** All Firestore entry operations (save, fetch) are scoped to the authenticated user's `uid`.
 - **Date Filtering:** Entries can be filtered by date ranges (Today, This Week, Last Month, Last Year) with proper date logic using date-fns library. Active filters are visually indicated with green outlines.
 - **Logout Accessibility:** A "Log Out" button is always available in the FilterDrawer for authenticated users.
 - **Toast Placement:** Toast notifications are positioned in the top-right to avoid UI overlap.
+- **Content Limits:** Journal entries are limited to 3,000 characters with a visual character counter that turns red when approaching the limit. Voice recordings are limited to 1 minute with an animated countdown timer.
+- **UI Feedback:** The "Add Entry" button is disabled during voice recording to prevent conflicting actions.
 
 ## Design Patterns
 

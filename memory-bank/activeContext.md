@@ -13,11 +13,14 @@
 ## Recent Changes
 
 - UI Improvements:
-  - Renamed app from "Mindful Inkwell" to "Gorlea's Ink" throughout the application
+  - Renamed app from "Mindful Inkwell" to "Gorlea Dot Ink" throughout the application
   - Added Gorlea logo to the AppBar and login page
   - Enhanced Google sign-in button with official Google colors and logo
   - Added a clean, minimal "no journal entries yet" message when user has no entries
   - Improved login page with larger, more dynamic logo
+  - Added a 1-minute timer with animated countdown for voice recordings
+  - Implemented a 3,000 character limit for journal entries with visual counter
+  - Disabled the "Add Entry" button during voice recording to prevent conflicts
 - Improved journal entries display:
   - Implemented chronological sorting with newest entries first
   - Created smart date formatting (relative time for recent entries, date format for older entries)
@@ -48,8 +51,9 @@ Previous changes:
 - All credentials are managed via environment variables and excluded from version control.
 - Firestore collections are created automatically on first write.
 - Firestore security rules are set to restrict access to authenticated users and their own entries.
-- Voice notes are fully transcribed using OpenAI and saved to Firestore.
+- Voice notes are fully transcribed using OpenAI and saved to Firestore, with a 1-minute recording limit.
+- Journal entries have a 3,000 character limit to prevent system overload while allowing for detailed expression.
 - Poetry generation is handled securely through an Express backend to protect API keys.
 - Poem presentation is personalized with Gorlea signature for a more human touch.
-- UI/UX improvements are prioritized for accessibility and usability.
+- UI/UX improvements are prioritized for accessibility and usability, including disabling conflicting actions.
 - Memory Bank documentation is updated after each significant change or upon user request.
