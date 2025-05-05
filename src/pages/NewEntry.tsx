@@ -12,6 +12,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { fadeInVariants, slideUpVariants, poemRevealVariants, buttonVariants } from "@/lib/animations";
 
+// Maximum character limit for journal entries
+const MAX_ENTRY_LENGTH = 3000;
+
 const NewEntry = () => {
   const [content, setContent] = useState("");
   const [isRecording, setIsRecording] = useState(false);
@@ -20,6 +23,17 @@ const NewEntry = () => {
   const recorderRef = useRef<RecordRTC | null>(null);
   const navigate = useNavigate();
   const { user } = useAuth();
+
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newContent = e.target.value;
+    if (newContent.length <= MAX_ENTRY_LENGTH) {
+      setContent(newContent);
+    } else {
+      // If user tries to paste text that exceeds the limit, truncate it
+      setContent(newContent.slice(0, MAX_ENTRY_LENGTH));
+      toast.info(`Journal entries are limited to ${MAX_ENTRY_LENGTH} characters`);
+    }
+  };
 
   const handleSave = async () => {
     let entryContent = content;
@@ -120,13 +134,19 @@ const NewEntry = () => {
           animate="visible"
           transition={{ delay: 0.1 }}
         >
-          <Textarea
-            className="min-h-[300px] bg-secondary/20 text-primary-foreground placeholder:text-primary-foreground/60"
-            placeholder="Write your thoughts..."
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            autoFocus
-          />
+          <div className="relative">
+            <Textarea
+              className="min-h-[300px] bg-secondary/20 text-primary-foreground placeholder:text-primary-foreground/60"
+              placeholder="Write your thoughts..."
+              value={content}
+              onChange={handleContentChange}
+              maxLength={MAX_ENTRY_LENGTH}
+              autoFocus
+            />
+            <div className={`text-xs mt-1 text-right ${content.length >= MAX_ENTRY_LENGTH * 0.9 ? 'text-red-400' : 'text-primary-foreground/60'}`}>
+              {content.length}/{MAX_ENTRY_LENGTH} characters
+            </div>
+          </div>
         </motion.div>
 
         <motion.div
