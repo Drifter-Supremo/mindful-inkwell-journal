@@ -361,13 +361,21 @@ const EntriesList = ({ activeFilter }: EntriesListProps) => {
         )}
       </motion.div>
 
-      {/* New Entry Button */}
+      {/* New Entry Button - Disabled while recording */}
       <Button
         size="icon"
-        className="fixed bottom-24 right-6 h-14 w-14 rounded-full bg-accent hover:bg-accent/90 transition-all duration-300 shadow-md hover:shadow-lg"
-        onClick={() => setModalOpen(true)}
+        className={cn(
+          "fixed bottom-24 right-6 h-14 w-14 rounded-full transition-all duration-300 shadow-md",
+          isRecording
+            ? "bg-accent/40 cursor-not-allowed"
+            : "bg-accent hover:bg-accent/90 hover:shadow-lg"
+        )}
+        onClick={() => !isRecording && setModalOpen(true)}
+        disabled={isRecording}
+        aria-disabled={isRecording}
+        title={isRecording ? "Finish recording first" : "Add new entry"}
       >
-        <Plus className="h-6 w-6 text-primary" />
+        <Plus className={cn("h-6 w-6 text-primary", isRecording && "opacity-50")} />
       </Button>
 
       {/* Voice Recording Button */}
