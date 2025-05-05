@@ -87,7 +87,7 @@ const Auth = () => {
                 }
               }}
             >
-              Gorlea's Ink
+              Gorlea Dot Ink
             </motion.h1>
             <motion.p
               className="text-primary/60 mb-8"

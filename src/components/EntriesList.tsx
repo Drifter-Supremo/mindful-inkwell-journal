@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
-import { Mic, MicOff, Plus, ChevronDown, ChevronUp, Trash, FilterX, X } from "lucide-react";
+import { Mic, MicOff, Plus, ChevronDown, ChevronUp, Trash, FilterX, X, Timer } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/formatDate";
@@ -28,6 +28,8 @@ const EntriesList = ({ activeFilter }: EntriesListProps) => {
 
   const [isRecording, setIsRecording] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(60); // 60 seconds = 1 minute
+  const [timerActive, setTimerActive] = useState(false);
   const { user } = useAuth();
   const {
     allEntries,
@@ -38,7 +40,7 @@ const EntriesList = ({ activeFilter }: EntriesListProps) => {
   const [expandedEntryId, setExpandedEntryId] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
-  // Removed unused ref
+  const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Fetch all entries when user changes
   useEffect(() => {
@@ -46,6 +48,29 @@ const EntriesList = ({ activeFilter }: EntriesListProps) => {
       refreshEntries();
     }
   }, [user, refreshEntries]);
+
+  // Timer effect for recording
+  useEffect(() => {
+    if (timerActive && recordingTime > 0) {
+      timerIntervalRef.current = setInterval(() => {
+        setRecordingTime(prev => prev - 1);
+      }, 1000);
+    } else if (recordingTime === 0 && isRecording) {
+      // Auto-stop recording when timer reaches 0
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+        mediaRecorderRef.current.stop();
+        setIsRecording(false);
+        toast.info("Recording time limit reached");
+      }
+    }
+
+    return () => {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+        timerIntervalRef.current = null;
+      }
+    };
+  }, [timerActive, recordingTime, isRecording]);
 
   // Handle selected entry from search
   useEffect(() => {
@@ -347,6 +372,42 @@ const EntriesList = ({ activeFilter }: EntriesListProps) => {
 
       {/* Voice Recording Button */}
       <div className="fixed bottom-6 right-6 flex items-center space-x-4">
+        {/* Timer Display - Appears when recording */}
+        <AnimatePresence>
+          {isRecording && (
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.3 }}
+              className="flex items-center bg-secondary/90 rounded-full px-3 py-1 shadow-md"
+            >
+              <Timer className="h-4 w-4 mr-1 text-primary" />
+              <motion.div
+                className="text-primary font-medium"
+                key={recordingTime} // Force re-render on time change for animation
+                initial={{ scale: 1.1 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.2 }}
+              >
+                {Math.floor(recordingTime / 60)}:{recordingTime % 60 < 10 ? '0' : ''}{recordingTime % 60}
+              </motion.div>
+              <motion.div
+                className="w-full h-1 bg-primary/20 rounded-full mt-1 ml-2 overflow-hidden"
+                style={{ width: '40px' }}
+              >
+                <motion.div
+                  className="h-full bg-accent"
+                  style={{
+                    width: `${(recordingTime / 60) * 100}%`,
+                    transition: 'width 1s linear'
+                  }}
+                />
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Cancel Recording Button - Appears when recording */}
         <AnimatePresence>
           {isRecording && (
@@ -368,9 +429,11 @@ const EntriesList = ({ activeFilter }: EntriesListProps) => {
                     chunksRef.current = [];
                     // Reset recording state
                     setIsRecording(false);
+                    // Stop the timer
+                    setTimerActive(false);
                     // Notify user
                     toast.info("Recording canceled");
-                    
+
                     // Override the onstop handler to do nothing
                     mediaRecorderRef.current.onstop = () => {};
                   }
@@ -381,7 +444,7 @@ const EntriesList = ({ activeFilter }: EntriesListProps) => {
             </motion.div>
           )}
         </AnimatePresence>
-        
+
         {/* Main Recording Button */}
         <Button
           size="icon"
@@ -400,12 +463,16 @@ const EntriesList = ({ activeFilter }: EntriesListProps) => {
               chunksRef.current = [];
               mr.ondataavailable = (e) => chunksRef.current.push(e.data);
               mr.start();
-              toast.info("Recording started");
+              toast.info("Recording started (1 minute limit)");
               setIsRecording(true);
+              // Reset and start the timer
+              setRecordingTime(60);
+              setTimerActive(true);
             } else {
               // Stop and process recording
               mediaRecorderRef.current?.stop();
               setIsRecording(false);
+              setTimerActive(false);
               toast.success("Recording stopped");
               mediaRecorderRef.current!.onstop = async () => {
                 toast.loading("Transcribing voice note...");
