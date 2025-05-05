@@ -115,4 +115,4 @@
 - Current font configuration:
   - Main UI font: Nunito (working correctly)
   - Poem font: Gloria Hallelujah (working correctly)
-- Documentation will be updated as new features are implemented or changes occur.
+- Documentation will be updated as new features are implemented or changes occur!
