@@ -1,6 +1,6 @@
-const OpenAI = require("openai");
+import OpenAI from "openai";
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   try {
     const { entry } = req.body ?? {};
     if (!entry) return res.status(400).json({ error: "missing-entry" });
