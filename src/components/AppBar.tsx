@@ -47,15 +47,17 @@ const AppBar = ({ onMenuClick }: AppBarProps) => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-primary px-4 py-3">
-      <div className="flex items-center justify-between">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onMenuClick}
-          className="text-primary-foreground hover:bg-primary/20"
-        >
-          <Menu className="h-5 w-5" />
-        </Button>
+      <div className="grid grid-cols-3 items-center">
+        <div className="flex items-center justify-start">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onMenuClick}
+            className="text-primary-foreground hover:bg-primary/20"
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+        </div>
 
         <div className={cn(
           "flex justify-center items-center transition-opacity duration-300",
@@ -69,17 +71,19 @@ const AppBar = ({ onMenuClick }: AppBarProps) => {
           />
         </div>
 
-        <div className="relative flex justify-end w-10 md:w-40 lg:w-64">
-          <SearchBar
-            onSearch={handleSearch}
-            onExpandChange={handleSearchExpandChange}
-          />
-          <SearchResults
-            results={searchResults}
-            query={searchQuery}
-            isVisible={isSearching && searchQuery.length > 0}
-            onResultClick={handleResultClick}
-          />
+        <div className="flex items-center justify-end h-10">
+          <div className="relative">
+            <SearchBar
+              onSearch={handleSearch}
+              onExpandChange={handleSearchExpandChange}
+            />
+            <SearchResults
+              results={searchResults}
+              query={searchQuery}
+              isVisible={isSearching && searchQuery.length > 0}
+              onResultClick={handleResultClick}
+            />
+          </div>
         </div>
       </div>
     </header>
