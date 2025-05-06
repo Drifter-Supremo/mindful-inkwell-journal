@@ -98,6 +98,11 @@
   - Updated "Last Year" filter to show entries from the previous calendar year instead of the last 365 days
   - Fixed a bug where clicking the "Last Year" filter would cause a JavaScript error due to variable scope issues
   - Improved documentation in the code to clearly explain the behavior of each filter
+
+- Mobile UI improvements:
+  - Fixed an issue where the Save Entry and Cancel buttons were hidden by the mobile keyboard when adding a new journal entry
+  - Implemented keyboard detection to adjust the dialog position and content height when the keyboard is visible
+  - Added responsive styling to ensure buttons remain accessible on smaller screens
 - Deployment preparation:
   - Created Vercel configuration file (vercel.json)
   - Set up serverless function for poem generation
