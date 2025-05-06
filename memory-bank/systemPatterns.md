@@ -27,7 +27,7 @@
 - **Branding:** App renamed to "Gorlea Dot Ink" with logo displayed in AppBar and login page.
 - **Authentication:** Google Sign-In via Firebase Auth with official Google colors and logo for secure, user-friendly login. All authentication and user state is managed via Firebase; Supabase has been fully removed.
 - **User Data Scoping:** All Firestore entry operations (save, fetch) are scoped to the authenticated user's `uid`.
-- **Date Filtering:** Entries can be filtered by date ranges (Today, This Week, Last Month, Last Year) with proper date logic using date-fns library. Active filters are visually indicated with green outlines.
+- **Date Filtering:** Entries can be filtered by date ranges (Today, This Week, Last Month, Last Year) with proper date logic using date-fns library. "Today" shows entries from the current day, "This Week" shows entries from the current week (Monday to Sunday), "Last Month" shows entries from the previous calendar month, and "Last Year" shows entries from the previous calendar year. Active filters are visually indicated with green outlines.
 - **Logout Accessibility:** A "Log Out" button is always available in the FilterDrawer for authenticated users.
 - **Toast Placement:** Toast notifications are positioned in the top-right to avoid UI overlap.
 - **Content Limits:** Journal entries are limited to 3,000 characters with a visual character counter that turns red when approaching the limit. Voice recordings are limited to 1 minute with an animated countdown timer.
