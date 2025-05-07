@@ -27,7 +27,7 @@ const App = () => (
       <SearchProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Auth />} /> {/* Auth is now the main page */}
+            <Route path="/" element={<Auth />} />
             <Route
               path="/entries"
               element={

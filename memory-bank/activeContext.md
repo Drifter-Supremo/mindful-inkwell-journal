@@ -13,9 +13,9 @@
 ## Recent Changes
 
 - Authentication Flow Improvements:
-  - Simplified routing by making the login page the root route ("/") instead of "/auth"
-  - Updated protected routes to redirect to root path instead of "/auth"
-  - Updated Firebase configuration to use "gorlea.ink" as the auth domain
+  - Reverted to original routing structure with "/auth" for authentication
+  - Updated Vercel configuration to properly handle client-side routing
+  - Configured Firebase to use the default Firebase hosting domain
 
 - UI Improvements:
   - Renamed app from "Mindful Inkwell" to "Gorlea Dot Ink" throughout the application
