@@ -11,7 +11,9 @@ import { Loader2 } from "lucide-react";
 const provider = new GoogleAuthProvider();
 // Add custom parameters for Google sign-in
 provider.setCustomParameters({
-  prompt: 'select_account'
+  prompt: 'select_account',
+  // Force the auth domain to use the Firebase project's domain for authentication
+  auth_domain: 'gorlea-todo-list.firebaseapp.com'
 });
 
 const Auth = () => {
@@ -39,11 +41,21 @@ const Auth = () => {
     const auth = getAuth();
     try {
       console.log("Auth domain:", auth.config.authDomain);
+      console.log("Provider settings:", provider.customParameters);
+      console.log("Current URL:", window.location.href);
+      console.log("Attempting sign-in with popup...");
+
       const result = await signInWithPopup(auth, provider);
       console.log("Sign-in successful:", result.user.displayName);
+      console.log("User ID:", result.user.uid);
       // onAuthStateChanged will handle navigation
     } catch (error: any) {
       console.error("Google sign-in error:", error);
+      console.error("Error code:", error.code);
+      console.error("Error message:", error.message);
+      if (error.customData) {
+        console.error("Custom data:", error.customData);
+      }
       setIsLoading(false);
       alert(`Sign-in error: ${error.message}`);
     }

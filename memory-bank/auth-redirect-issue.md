@@ -39,12 +39,21 @@ The solution involved the following changes:
    });
    ```
 
-3. Ensured the Firebase configuration in .env was using the correct auth domain:
+3. Ensured the Firebase configuration in .env was using the original Firebase auth domain:
    ```
-   VITE_FIREBASE_AUTH_DOMAIN=www.gorlea.ink
+   VITE_FIREBASE_AUTH_DOMAIN=gorlea-todo-list.firebaseapp.com
    ```
 
-   Note: When changing the app name in Google OAuth settings, it's important to also update the auth domain in the .env file to match the custom domain being used.
+   4. Explicitly set the auth_domain parameter in the GoogleAuthProvider:
+   ```javascript
+   provider.setCustomParameters({
+     prompt: 'select_account',
+     // Force the auth domain to use the Firebase project's domain for authentication
+     auth_domain: 'gorlea-todo-list.firebaseapp.com'
+   });
+   ```
+
+   Note: When using a custom domain with Firebase Authentication, it's often more reliable to keep using the original Firebase auth domain for the authentication flow, while ensuring your custom domain is properly added to the authorized JavaScript origins in the Google OAuth settings.
 
 ## Technical Details
 
@@ -89,14 +98,22 @@ To verify the fix:
 
 If you encounter a 404 error at the URL `gorlea.ink/__/auth/handler?apiKey=...`, it typically indicates one of these issues:
 
-1. The auth domain in your Firebase configuration doesn't match the domain you're using
+1. The auth domain configuration is causing conflicts between your custom domain and Firebase's authentication flow
 2. The domain isn't properly configured in the Google OAuth settings
 3. The Vercel configuration doesn't have the proper rewrites to handle the auth callback
 
 To fix this:
-1. Ensure the `VITE_FIREBASE_AUTH_DOMAIN` in your .env file matches your custom domain (e.g., `www.gorlea.ink`)
-2. Verify all domains are added to both Authorized JavaScript origins and Authorized redirect URIs in Google OAuth settings
-3. Check your Vercel configuration includes the proper rewrites for client-side routing
+1. Use the original Firebase auth domain in your .env file: `VITE_FIREBASE_AUTH_DOMAIN=your-project-id.firebaseapp.com`
+2. Explicitly set the auth_domain parameter in your GoogleAuthProvider:
+   ```javascript
+   provider.setCustomParameters({
+     prompt: 'select_account',
+     auth_domain: 'your-project-id.firebaseapp.com'
+   });
+   ```
+3. Verify all domains are added to the Authorized JavaScript origins in Google OAuth settings
+4. Check your Vercel configuration includes the proper rewrites for client-side routing
+5. Add detailed console logging to help diagnose authentication issues
 
 ## Future Considerations
 
