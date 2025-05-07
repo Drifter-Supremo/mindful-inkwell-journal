@@ -9,6 +9,10 @@ import { authVariants, logoVariants } from "@/lib/animations";
 import { Loader2 } from "lucide-react";
 
 const provider = new GoogleAuthProvider();
+// Add custom parameters for Google sign-in
+provider.setCustomParameters({
+  prompt: 'select_account'
+});
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -33,11 +37,14 @@ const Auth = () => {
     setIsLoading(true);
     const auth = getAuth();
     try {
-      await signInWithPopup(auth, provider);
+      console.log("Auth domain:", auth.config.authDomain);
+      const result = await signInWithPopup(auth, provider);
+      console.log("Sign-in successful:", result.user.displayName);
       // onAuthStateChanged will handle navigation
     } catch (error: any) {
+      console.error("Google sign-in error:", error);
       setIsLoading(false);
-      alert(error.message);
+      alert(`Sign-in error: ${error.message}`);
     }
   };
 

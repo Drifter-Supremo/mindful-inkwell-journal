@@ -13,9 +13,9 @@
 ## Recent Changes
 
 - Authentication Flow Improvements:
-  - Reverted to original routing structure with "/auth" for authentication
-  - Updated Vercel configuration to properly handle client-side routing
-  - Configured Firebase to use the default Firebase hosting domain
+  - Updated Vercel configuration to properly handle client-side routing with `{ "source": "/(.*)", "destination": "/" }`
+  - Fixed Google sign-in popup 404 error by using the default Firebase auth domain
+  - Added better error handling and logging for authentication issues
 
 - UI Improvements:
   - Renamed app from "Mindful Inkwell" to "Gorlea Dot Ink" throughout the application
