@@ -21,6 +21,7 @@ const Auth = () => {
 
   useEffect(() => {
     const auth = getAuth();
+    console.log("Auth domain in useEffect:", auth.config.authDomain);
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         // Add a slight delay before navigating for a smoother transition

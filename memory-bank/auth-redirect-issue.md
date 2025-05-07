@@ -41,8 +41,10 @@ The solution involved the following changes:
 
 3. Ensured the Firebase configuration in .env was using the correct auth domain:
    ```
-   VITE_FIREBASE_AUTH_DOMAIN=gorlea-todo-list.firebaseapp.com
+   VITE_FIREBASE_AUTH_DOMAIN=www.gorlea.ink
    ```
+
+   Note: When changing the app name in Google OAuth settings, it's important to also update the auth domain in the .env file to match the custom domain being used.
 
 ## Technical Details
 
@@ -81,8 +83,24 @@ To verify the fix:
 3. Complete the Google authentication flow
 4. Confirm successful redirect to the entries page
 
+## Common Issues and Troubleshooting
+
+### 404 Error on Auth Handler Page
+
+If you encounter a 404 error at the URL `gorlea.ink/__/auth/handler?apiKey=...`, it typically indicates one of these issues:
+
+1. The auth domain in your Firebase configuration doesn't match the domain you're using
+2. The domain isn't properly configured in the Google OAuth settings
+3. The Vercel configuration doesn't have the proper rewrites to handle the auth callback
+
+To fix this:
+1. Ensure the `VITE_FIREBASE_AUTH_DOMAIN` in your .env file matches your custom domain (e.g., `www.gorlea.ink`)
+2. Verify all domains are added to both Authorized JavaScript origins and Authorized redirect URIs in Google OAuth settings
+3. Check your Vercel configuration includes the proper rewrites for client-side routing
+
 ## Future Considerations
 
 If additional domains are added in the future, remember to:
 1. Add them to the Google OAuth configuration (both JavaScript origins and redirect URIs if needed)
 2. Ensure the Firebase project settings are updated to include the new domains
+3. Update the `VITE_FIREBASE_AUTH_DOMAIN` in your .env file if you're changing the primary domain
