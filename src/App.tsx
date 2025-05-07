@@ -14,7 +14,7 @@ import { SearchProvider } from "@/contexts/SearchContext"; // Import SearchProvi
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const { user } = useAuth();
   if (!user) {
-    return <Navigate to="/auth" replace />;
+    return <Navigate to="/" replace />;
   }
   return children;
 };
@@ -27,8 +27,7 @@ const App = () => (
       <SearchProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Navigate to="/entries" replace />} />
-            <Route path="/auth" element={<Auth />} /> {/* Add route for Auth page */}
+            <Route path="/" element={<Auth />} /> {/* Auth is now the main page */}
             <Route
               path="/entries"
               element={
