@@ -4,9 +4,23 @@ import { Button } from "./ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { cn } from "@/lib/utils";
-import { CalendarDays, Calendar, CalendarClock, CalendarRange, X, LogOut, Loader2 } from "lucide-react";
+import {
+  CalendarDays,
+  Calendar,
+  CalendarClock,
+  CalendarRange,
+  X,
+  LogOut,
+  Loader2,
+  Upload,
+  User,
+  Camera,
+  Database
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { drawerItemVariants, fadeInVariants } from "@/lib/animations";
+import { useState, useRef } from "react";
+import { toast } from "sonner";
 
 type FilterDrawerProps = {
   open: boolean;
@@ -23,7 +37,9 @@ const FilterDrawer = ({ open, onOpenChange, activeFilter, setActiveFilter }: Fil
     { name: "Last Year", type: "date", icon: <CalendarRange className="mr-2 h-4 w-4" /> },
   ];
 
-  const { user, signOut, isSigningOut } = useAuth();
+  const { user, userProfile, signOut, isSigningOut, uploadProfilePicture } = useAuth();
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleLogout = async () => {
     await signOut();
@@ -38,6 +54,42 @@ const FilterDrawer = ({ open, onOpenChange, activeFilter, setActiveFilter }: Fil
       setActiveFilter(filterName);
     }
     onOpenChange(false); // Close drawer after selection
+  };
+
+  const handleProfilePictureClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Check file size (max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Image is too large. Maximum size is 2MB.");
+      return;
+    }
+
+    // Check file type
+    if (!file.type.startsWith("image/")) {
+      toast.error("Only image files are allowed.");
+      return;
+    }
+
+    try {
+      setIsUploading(true);
+      await uploadProfilePicture(file);
+      toast.success("Profile picture updated successfully!");
+    } catch (error) {
+      console.error("Error uploading profile picture:", error);
+      toast.error("Failed to upload profile picture. Please try again.");
+    } finally {
+      setIsUploading(false);
+      // Clear the file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
   };
 
   return (
@@ -60,14 +112,42 @@ const FilterDrawer = ({ open, onOpenChange, activeFilter, setActiveFilter }: Fil
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                  className="relative"
+                  onClick={handleProfilePictureClick}
                 >
-                  <Avatar className="h-12 w-12 border-2 border-primary/20">
-                    <AvatarImage src={user.photoURL || ''} alt={user.displayName || 'User'} />
+                  <Avatar className="h-12 w-12 border-2 border-primary/20 cursor-pointer">
+                    <AvatarImage
+                      src={user.photoURL || ''}
+                      alt={userProfile?.username || user.displayName || 'User'}
+                    />
                     <AvatarFallback className="bg-primary/10 text-primary">
-                      {user.displayName ? user.displayName.charAt(0).toUpperCase() : 'U'}
+                      {userProfile?.username
+                        ? userProfile.username.charAt(0).toUpperCase()
+                        : user.displayName
+                          ? user.displayName.charAt(0).toUpperCase()
+                          : 'U'}
                     </AvatarFallback>
                   </Avatar>
+
+                  {/* Hidden file input for profile picture upload */}
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    className="hidden"
+                    accept="image/*"
+                  />
+
+                  {/* Camera icon overlay */}
+                  <div className="absolute bottom-0 right-0 bg-primary text-primary-foreground rounded-full p-1 cursor-pointer">
+                    {isUploading ? (
+                      <Loader2 className="h-3 w-3 animate-spin" />
+                    ) : (
+                      <Camera className="h-3 w-3" />
+                    )}
+                  </div>
                 </motion.div>
+
                 <motion.div
                   className="flex flex-col"
                   variants={fadeInVariants}
@@ -75,7 +155,9 @@ const FilterDrawer = ({ open, onOpenChange, activeFilter, setActiveFilter }: Fil
                   animate="visible"
                   transition={{ delay: 0.3 }}
                 >
-                  <span className="font-medium text-primary">{user.displayName}</span>
+                  <span className="font-medium text-primary">
+                    {userProfile?.username || user.displayName || 'User'}
+                  </span>
                   <span className="text-xs text-primary/60">{user.email}</span>
                 </motion.div>
               </motion.div>

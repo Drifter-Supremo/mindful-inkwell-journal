@@ -28,7 +28,7 @@
 - shadcn/ui for reusable, accessible UI components.
 - Lucide React for iconography.
 - React Router for client-side routing.
-- Firebase for backend services (authentication and data storage; all authentication and user state is managed via Firebase Auth with Google sign-in; Supabase has been fully removed).
+- Firebase for backend services (authentication and data storage; all authentication and user state is managed via Firebase Auth with email/password authentication; Google sign-in has been replaced).
 - OpenAI APIs for AI-powered features.
 - Environment variables are used for API keys and sensitive configuration:
   - In development: stored in a `.env` file excluded from git via `.gitignore`
@@ -45,7 +45,7 @@
 ## Technical Constraints
 
 - All sensitive keys (DeepSeek API, Firebase) must be stored in environment variables, not committed to the repository.
-- All authentication and data access is handled by Firebase Auth (Google sign-in) and Firestore, with all entry operations scoped to the authenticated user's `uid`.
+- All authentication and data access is handled by Firebase Auth (email/password authentication) and Firestore, with all entry operations scoped to the authenticated user's `uid`.
 - The app must remain responsive and accessible across devices.
 - AI features depend on external API availability and rate limits.
 - Date filtering relies on date-fns library for consistent date handling across browsers.

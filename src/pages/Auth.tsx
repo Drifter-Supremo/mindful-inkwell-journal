@@ -2,63 +2,150 @@
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "firebase/auth";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { motion, AnimatePresence } from "framer-motion";
-import { authVariants, logoVariants } from "@/lib/animations";
-import { Loader2 } from "lucide-react";
+import { authVariants, logoVariants, fadeInVariants } from "@/lib/animations";
+import { Loader2, Mail, Lock, User, ArrowRight } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
+import { z } from "zod";
 
-const provider = new GoogleAuthProvider();
-// Add custom parameters for Google sign-in
-provider.setCustomParameters({
-  prompt: 'select_account',
-  // Force the auth domain to use the Firebase project's domain for authentication
-  auth_domain: 'gorlea-todo-list.firebaseapp.com'
+// Form validation schemas
+const loginSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+const signupSchema = z.object({
+  username: z.string().min(3, "Username must be at least 3 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  confirmPassword: z.string().min(6, "Password must be at least 6 characters"),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
 });
 
 const Auth = () => {
   const navigate = useNavigate();
+  const { user, signIn, signUp, resetPassword } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
+
+  // Form state
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [username, setUsername] = useState("");
+
+  // Form errors
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    const auth = getAuth();
-    console.log("Auth domain in useEffect:", auth.config.authDomain);
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // Add a slight delay before navigating for a smoother transition
-        setIsExiting(true);
-        setTimeout(() => {
-          navigate("/entries");
-        }, 500);
-      }
-    });
-    return () => unsubscribe();
-  }, [navigate]);
-
-  const handleGoogleSignIn = async () => {
-    setIsLoading(true);
-    const auth = getAuth();
-    try {
-      console.log("Auth domain:", auth.config.authDomain);
-      console.log("Provider settings:", provider.customParameters);
-      console.log("Current URL:", window.location.href);
-      console.log("Attempting sign-in with popup...");
-
-      const result = await signInWithPopup(auth, provider);
-      console.log("Sign-in successful:", result.user.displayName);
-      console.log("User ID:", result.user.uid);
-      // onAuthStateChanged will handle navigation
-    } catch (error: any) {
-      console.error("Google sign-in error:", error);
-      console.error("Error code:", error.code);
-      console.error("Error message:", error.message);
-      if (error.customData) {
-        console.error("Custom data:", error.customData);
-      }
-      setIsLoading(false);
-      alert(`Sign-in error: ${error.message}`);
+    if (user) {
+      // Add a slight delay before navigating for a smoother transition
+      setIsExiting(true);
+      setTimeout(() => {
+        navigate("/entries");
+      }, 500);
     }
+  }, [user, navigate]);
+
+  const validateForm = () => {
+    try {
+      if (isSignUp) {
+        signupSchema.parse({
+          username,
+          email,
+          password,
+          confirmPassword,
+        });
+      } else if (isForgotPassword) {
+        z.object({
+          email: z.string().email("Please enter a valid email address"),
+        }).parse({ email });
+      } else {
+        loginSchema.parse({
+          email,
+          password,
+        });
+      }
+      setErrors({});
+      return true;
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const newErrors: Record<string, string> = {};
+        error.errors.forEach((err) => {
+          if (err.path[0]) {
+            newErrors[err.path[0] as string] = err.message;
+          }
+        });
+        setErrors(newErrors);
+      }
+      return false;
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
+    setIsLoading(true);
+
+    try {
+      if (isSignUp) {
+        await signUp(email, password, username);
+        toast.success("Account created successfully!");
+      } else if (isForgotPassword) {
+        await resetPassword(email);
+        toast.success("Password reset email sent. Check your inbox.");
+        setIsForgotPassword(false);
+      } else {
+        await signIn(email, password);
+      }
+    } catch (error: any) {
+      console.error("Authentication error:", error);
+      let errorMessage = "An error occurred. Please try again.";
+
+      // Handle specific Firebase error codes
+      if (error.code === "auth/user-not-found" || error.code === "auth/wrong-password") {
+        errorMessage = "Invalid email or password.";
+      } else if (error.code === "auth/email-already-in-use") {
+        errorMessage = "This email is already in use.";
+      } else if (error.code === "auth/weak-password") {
+        errorMessage = "Password is too weak.";
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
+      toast.error(errorMessage);
+      setIsLoading(false);
+    }
+  };
+
+  const resetForm = () => {
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
+    setUsername("");
+    setErrors({});
+  };
+
+  const toggleSignUp = () => {
+    resetForm();
+    setIsSignUp(!isSignUp);
+    setIsForgotPassword(false);
+  };
+
+  const toggleForgotPassword = () => {
+    resetForm();
+    setIsForgotPassword(!isForgotPassword);
+    setIsSignUp(false);
   };
 
   return (
@@ -71,7 +158,7 @@ const Auth = () => {
         variants={authVariants}
       >
         <motion.div
-          className="w-full max-w-md space-y-8 bg-secondary p-6 rounded-lg shadow-lg"
+          className="w-full max-w-md space-y-6 bg-secondary p-6 rounded-lg shadow-lg"
           variants={authVariants}
         >
           <motion.div className="text-center" variants={authVariants}>
@@ -110,7 +197,7 @@ const Auth = () => {
               Gorlea Dot Ink
             </motion.h1>
             <motion.p
-              className="text-primary/60 mb-8"
+              className="text-primary/60 mb-6"
               initial={{ opacity: 0, y: 10 }}
               animate={{
                 opacity: 1,
@@ -124,48 +211,311 @@ const Auth = () => {
               Breathe life to words, watch them dance
             </motion.p>
           </motion.div>
-          <motion.div
-            className="space-y-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{
-              opacity: 1,
-              y: 0,
-              transition: {
-                duration: 0.5,
-                delay: 0.5
-              }
-            }}
-          >
-            <motion.button
-              onClick={handleGoogleSignIn}
-              className="flex items-center justify-center w-full py-2.5 px-4 border rounded-md bg-white hover:bg-gray-50 transition-colors"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                  className="mr-2"
+
+          <AnimatePresence mode="wait">
+            {isForgotPassword ? (
+              <motion.form
+                key="forgot-password-form"
+                className="space-y-4"
+                onSubmit={handleSubmit}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                variants={fadeInVariants}
+              >
+                <motion.h2
+                  className="text-xl font-semibold text-primary text-center mb-4"
+                  variants={fadeInVariants}
                 >
-                  <Loader2 className="h-5 w-5 text-gray-500" />
+                  Reset Password
+                </motion.h2>
+
+                <motion.div className="space-y-2" variants={fadeInVariants}>
+                  <Label htmlFor="email" className="text-primary">
+                    Email
+                  </Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary/40 h-4 w-4" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="Enter your email"
+                      className={`pl-10 ${errors.email ? 'border-red-500' : ''}`}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      disabled={isLoading}
+                    />
+                  </div>
+                  {errors.email && (
+                    <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                  )}
                 </motion.div>
-              ) : (
-                <svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" className="mr-3">
-                  <g transform="matrix(1, 0, 0, 1, 0, 0)">
-                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
-                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
-                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-                  </g>
-                </svg>
-              )}
-              <span className="text-gray-700 font-medium">
-                {isLoading ? "Signing in..." : "Sign in with Google"}
-              </span>
-            </motion.button>
-          </motion.div>
+
+                <motion.div className="pt-2" variants={fadeInVariants}>
+                  <Button
+                    type="submit"
+                    className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Sending Reset Link...
+                      </>
+                    ) : (
+                      <>
+                        Reset Password
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </>
+                    )}
+                  </Button>
+                </motion.div>
+
+                <motion.div className="text-center mt-4" variants={fadeInVariants}>
+                  <button
+                    type="button"
+                    onClick={toggleForgotPassword}
+                    className="text-primary/70 hover:text-primary text-sm"
+                    disabled={isLoading}
+                  >
+                    Back to Sign In
+                  </button>
+                </motion.div>
+              </motion.form>
+            ) : isSignUp ? (
+              <motion.form
+                key="signup-form"
+                className="space-y-4"
+                onSubmit={handleSubmit}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                variants={fadeInVariants}
+              >
+                <motion.h2
+                  className="text-xl font-semibold text-primary text-center mb-4"
+                  variants={fadeInVariants}
+                >
+                  Create an Account
+                </motion.h2>
+
+                <motion.div className="space-y-2" variants={fadeInVariants}>
+                  <Label htmlFor="username" className="text-primary">
+                    Username
+                  </Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary/40 h-4 w-4" />
+                    <Input
+                      id="username"
+                      type="text"
+                      placeholder="Choose a username"
+                      className={`pl-10 ${errors.username ? 'border-red-500' : ''}`}
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      disabled={isLoading}
+                    />
+                  </div>
+                  {errors.username && (
+                    <p className="text-red-500 text-sm mt-1">{errors.username}</p>
+                  )}
+                </motion.div>
+
+                <motion.div className="space-y-2" variants={fadeInVariants}>
+                  <Label htmlFor="email" className="text-primary">
+                    Email
+                  </Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary/40 h-4 w-4" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="Enter your email"
+                      className={`pl-10 ${errors.email ? 'border-red-500' : ''}`}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      disabled={isLoading}
+                    />
+                  </div>
+                  {errors.email && (
+                    <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                  )}
+                </motion.div>
+
+                <motion.div className="space-y-2" variants={fadeInVariants}>
+                  <Label htmlFor="password" className="text-primary">
+                    Password
+                  </Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary/40 h-4 w-4" />
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="Create a password"
+                      className={`pl-10 ${errors.password ? 'border-red-500' : ''}`}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      disabled={isLoading}
+                    />
+                  </div>
+                  {errors.password && (
+                    <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+                  )}
+                </motion.div>
+
+                <motion.div className="space-y-2" variants={fadeInVariants}>
+                  <Label htmlFor="confirmPassword" className="text-primary">
+                    Confirm Password
+                  </Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary/40 h-4 w-4" />
+                    <Input
+                      id="confirmPassword"
+                      type="password"
+                      placeholder="Confirm your password"
+                      className={`pl-10 ${errors.confirmPassword ? 'border-red-500' : ''}`}
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      disabled={isLoading}
+                    />
+                  </div>
+                  {errors.confirmPassword && (
+                    <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>
+                  )}
+                </motion.div>
+
+                <motion.div className="pt-2" variants={fadeInVariants}>
+                  <Button
+                    type="submit"
+                    className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Creating Account...
+                      </>
+                    ) : (
+                      <>
+                        Sign Up
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </>
+                    )}
+                  </Button>
+                </motion.div>
+
+                <motion.div className="text-center mt-4" variants={fadeInVariants}>
+                  <button
+                    type="button"
+                    onClick={toggleSignUp}
+                    className="text-primary/70 hover:text-primary text-sm"
+                    disabled={isLoading}
+                  >
+                    Already have an account? Sign In
+                  </button>
+                </motion.div>
+              </motion.form>
+            ) : (
+              <motion.form
+                key="login-form"
+                className="space-y-4"
+                onSubmit={handleSubmit}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                variants={fadeInVariants}
+              >
+                <motion.h2
+                  className="text-xl font-semibold text-primary text-center mb-4"
+                  variants={fadeInVariants}
+                >
+                  Sign In
+                </motion.h2>
+
+                <motion.div className="space-y-2" variants={fadeInVariants}>
+                  <Label htmlFor="email" className="text-primary">
+                    Email
+                  </Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary/40 h-4 w-4" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="Enter your email"
+                      className={`pl-10 ${errors.email ? 'border-red-500' : ''}`}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      disabled={isLoading}
+                    />
+                  </div>
+                  {errors.email && (
+                    <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                  )}
+                </motion.div>
+
+                <motion.div className="space-y-2" variants={fadeInVariants}>
+                  <div className="flex justify-between items-center">
+                    <Label htmlFor="password" className="text-primary">
+                      Password
+                    </Label>
+                    <button
+                      type="button"
+                      onClick={toggleForgotPassword}
+                      className="text-primary/70 hover:text-primary text-xs"
+                      disabled={isLoading}
+                    >
+                      Forgot Password?
+                    </button>
+                  </div>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary/40 h-4 w-4" />
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="Enter your password"
+                      className={`pl-10 ${errors.password ? 'border-red-500' : ''}`}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      disabled={isLoading}
+                    />
+                  </div>
+                  {errors.password && (
+                    <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+                  )}
+                </motion.div>
+
+                <motion.div className="pt-2" variants={fadeInVariants}>
+                  <Button
+                    type="submit"
+                    className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Signing In...
+                      </>
+                    ) : (
+                      <>
+                        Sign In
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </>
+                    )}
+                  </Button>
+                </motion.div>
+
+                <motion.div className="text-center mt-4" variants={fadeInVariants}>
+                  <button
+                    type="button"
+                    onClick={toggleSignUp}
+                    className="text-primary/70 hover:text-primary text-sm"
+                    disabled={isLoading}
+                  >
+                    Don't have an account? Sign Up
+                  </button>
+                </motion.div>
+              </motion.form>
+            )}
+          </AnimatePresence>
         </motion.div>
       </motion.div>
     </AnimatePresence>

@@ -25,7 +25,7 @@
 - **Floating Action Buttons:** Used for quick access to new entry creation.
 - **Responsive Design:** Tailwind CSS ensures the UI adapts to all screen sizes.
 - **Branding:** App renamed to "Gorlea Dot Ink" with logo displayed in AppBar and login page.
-- **Authentication:** Google Sign-In via Firebase Auth with official Google colors and logo for secure, user-friendly login. All authentication and user state is managed via Firebase; Supabase has been fully removed.
+- **Authentication:** Email/password authentication via Firebase Auth with clean, modern forms for sign-in, sign-up, and password reset. All authentication and user state is managed via Firebase; Google Sign-In has been replaced with email/password authentication.
 - **User Data Scoping:** All Firestore entry operations (save, fetch) are scoped to the authenticated user's `uid`.
 - **Date Filtering:** Entries can be filtered by date ranges (Today, This Week, Last Month, Last Year) with proper date logic using date-fns library. "Today" shows entries from the current day, "This Week" shows entries from the current week (Monday to Sunday), "Last Month" shows entries from the previous calendar month, and "Last Year" shows entries from the previous calendar year. Active filters are visually indicated with green outlines.
 - **Logout Accessibility:** A "Log Out" button is always available in the FilterDrawer for authenticated users.
