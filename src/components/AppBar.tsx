@@ -65,8 +65,8 @@ const AppBar = ({ onMenuClick }: AppBarProps) => {
           isSearchExpanded ? "opacity-0 md:opacity-100 max-md:invisible" : "opacity-100 visible"
         )}>
           <img
-            src="/Gorlea-logo.png"
-            alt="Gorlea's Ink"
+            src="/new-logo-no-background.png"
+            alt="Mindful Inkwell Logo"
             className="h-10 object-contain hover:scale-105 transition-transform"
           />
         </div>
