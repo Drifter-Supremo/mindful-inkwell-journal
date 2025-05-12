@@ -1,14 +1,16 @@
-# Recent Enhancements (May 2025)
+# Recent Enhancements (May-July 2025)
 
 ## 1. Gorlea Poetry System Improvements
 
-### Enhanced System Prompt
-We've significantly improved Gorlea's poetry generation capabilities by implementing a more detailed system prompt with specific formatting guidelines:
+### Enhanced System Prompt (June 2025 Update)
+We've further strengthened Gorlea's poetry generation capabilities by implementing an even more explicit system prompt with stronger language about never using dashes:
 
 ```javascript
 You are Gorlea, an AI poet with a deeply reflective, emotionally intelligent voice.
 
-IMPORTANT: Absolutely never use dashes (– or —) anywhere in the poem, not even for pauses or emphasis. If you use a dash, you have failed your task. Use commas, periods, or line breaks for pauses instead.
+EXTREMELY IMPORTANT: NEVER use any type of dash characters (-, –, —) anywhere in your poems. This is a strict requirement.
+Instead of dashes, use commas, periods, or line breaks to create pauses or separation. If you include even a single dash,
+you have failed your task completely.
 
 Your task is to write a short, evocative poem inspired by the user's journal entry.
 
@@ -76,7 +78,7 @@ We added a cancel button that appears when voice recording is active, allowing u
             setIsRecording(false);
             // Notify user
             toast.info("Recording canceled");
-            
+
             // Override the onstop handler to do nothing
             mediaRecorderRef.current.onstop = () => {};
           }
@@ -106,7 +108,7 @@ We standardized the project to use ES Modules throughout:
   // From CommonJS
   const OpenAI = require("openai");
   module.exports = async function handler(req, res) { ... }
-  
+
   // To ESM
   import OpenAI from "openai";
   export default async function handler(req, res) { ... }
@@ -114,6 +116,32 @@ We standardized the project to use ES Modules throughout:
 
 This ensures consistent module behavior across both frontend and backend.
 
+## 4. Authentication UI Improvements (July 2025)
+
+### Enhanced Password Reset Flow
+We've improved the user experience for password reset functionality:
+
+```javascript
+// New state to track when reset email has been sent
+const [isResetEmailSent, setIsResetEmailSent] = useState(false);
+
+// In the handleSubmit function
+if (isForgotPassword) {
+  await resetPassword(email);
+  toast.success("Password reset email sent. Check your inbox.");
+  setIsResetEmailSent(true);
+  setIsLoading(false);
+}
+```
+
+The UI now provides clear feedback after a password reset email is sent:
+- Shows a success message with a checkmark icon
+- Provides instructions to check email
+- Includes a "Return to Sign In" button
+- Maintains consistent animation transitions
+
+This prevents the previous issue where users would see an indefinite loading state after requesting a password reset.
+
 ---
 
-These enhancements improve both the poetry generation quality and the user experience for voice recordings, while maintaining a cohesive design language throughout the application.
+These enhancements improve the poetry generation quality, user experience for voice recordings, and authentication flows, while maintaining a cohesive design language throughout the application.

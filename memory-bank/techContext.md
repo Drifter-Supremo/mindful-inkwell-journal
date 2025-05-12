@@ -28,7 +28,7 @@
 - shadcn/ui for reusable, accessible UI components.
 - Lucide React for iconography.
 - React Router for client-side routing.
-- Firebase for backend services (authentication and data storage; all authentication and user state is managed via Firebase Auth with email/password authentication; Google sign-in has been replaced).
+- Firebase for backend services (authentication and data storage; all authentication and user state is managed via Firebase Auth with email/password authentication; Google sign-in has been replaced). Password reset functionality includes a user-friendly success state with clear feedback.
 - OpenAI APIs for AI-powered features.
 - Environment variables are used for API keys and sensitive configuration:
   - In development: stored in a `.env` file excluded from git via `.gitignore`

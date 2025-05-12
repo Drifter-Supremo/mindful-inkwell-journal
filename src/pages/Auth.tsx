@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { motion, AnimatePresence } from "framer-motion";
 import { authVariants, logoVariants, fadeInVariants } from "@/lib/animations";
-import { Loader2, Mail, Lock, User, ArrowRight } from "lucide-react";
+import { Loader2, Mail, Lock, User, ArrowRight, CheckCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -35,6 +35,7 @@ const Auth = () => {
   const [isExiting, setIsExiting] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
+  const [isResetEmailSent, setIsResetEmailSent] = useState(false);
 
   // Form state
   const [email, setEmail] = useState("");
@@ -104,7 +105,8 @@ const Auth = () => {
       } else if (isForgotPassword) {
         await resetPassword(email);
         toast.success("Password reset email sent. Check your inbox.");
-        setIsForgotPassword(false);
+        setIsResetEmailSent(true);
+        setIsLoading(false);
       } else {
         await signIn(email, password);
       }
@@ -146,6 +148,7 @@ const Auth = () => {
     resetForm();
     setIsForgotPassword(!isForgotPassword);
     setIsSignUp(false);
+    setIsResetEmailSent(false);
   };
 
   return (
@@ -194,10 +197,9 @@ const Auth = () => {
 
           <AnimatePresence mode="wait">
             {isForgotPassword ? (
-              <motion.form
+              <motion.div
                 key="forgot-password-form"
                 className="space-y-4"
-                onSubmit={handleSubmit}
                 initial="hidden"
                 animate="visible"
                 exit="hidden"
@@ -210,58 +212,92 @@ const Auth = () => {
                   Reset Password
                 </motion.h2>
 
-                <motion.div className="space-y-2" variants={fadeInVariants}>
-                  <Label htmlFor="email" className="text-primary">
-                    Email
-                  </Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary/40 h-4 w-4" />
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="Enter your email"
-                      className={`pl-10 ${errors.email ? 'border-red-500' : ''}`}
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      disabled={isLoading}
-                    />
-                  </div>
-                  {errors.email && (
-                    <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-                  )}
-                </motion.div>
-
-                <motion.div className="pt-2" variants={fadeInVariants}>
-                  <Button
-                    type="submit"
-                    className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Sending Reset Link...
-                      </>
-                    ) : (
-                      <>
-                        Reset Password
+                {isResetEmailSent ? (
+                  // Success state after email is sent
+                  <>
+                    <motion.div
+                      className="text-center space-y-4 py-4"
+                      variants={fadeInVariants}
+                    >
+                      <div className="flex justify-center">
+                        <CheckCircle className="h-16 w-16 text-green-500" />
+                      </div>
+                      <p className="text-primary">
+                        Password reset email sent! Please check your inbox and follow the instructions to reset your password.
+                      </p>
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          setIsForgotPassword(false);
+                          setIsResetEmailSent(false);
+                        }}
+                        className="mt-4 bg-primary text-primary-foreground hover:bg-primary/90"
+                      >
+                        Return to Sign In
                         <ArrowRight className="ml-2 h-4 w-4" />
-                      </>
-                    )}
-                  </Button>
-                </motion.div>
-
-                <motion.div className="text-center mt-4" variants={fadeInVariants}>
-                  <button
-                    type="button"
-                    onClick={toggleForgotPassword}
-                    className="text-primary/70 hover:text-primary text-sm"
-                    disabled={isLoading}
+                      </Button>
+                    </motion.div>
+                  </>
+                ) : (
+                  // Form to enter email for password reset
+                  <motion.form
+                    className="space-y-4"
+                    onSubmit={handleSubmit}
                   >
-                    Back to Sign In
-                  </button>
-                </motion.div>
-              </motion.form>
+                    <motion.div className="space-y-2" variants={fadeInVariants}>
+                      <Label htmlFor="email" className="text-primary">
+                        Email
+                      </Label>
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary/40 h-4 w-4" />
+                        <Input
+                          id="email"
+                          type="email"
+                          placeholder="Enter your email"
+                          className={`pl-10 ${errors.email ? 'border-red-500' : ''}`}
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          disabled={isLoading}
+                        />
+                      </div>
+                      {errors.email && (
+                        <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                      )}
+                    </motion.div>
+
+                    <motion.div className="pt-2" variants={fadeInVariants}>
+                      <Button
+                        type="submit"
+                        className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+                        disabled={isLoading}
+                      >
+                        {isLoading ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Sending Reset Link...
+                          </>
+                        ) : (
+                          <>
+                            Reset Password
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                          </>
+                        )}
+                      </Button>
+                    </motion.div>
+
+                    <motion.div className="text-center mt-4" variants={fadeInVariants}>
+                      <button
+                        type="button"
+                        onClick={toggleForgotPassword}
+                        className="text-primary/70 hover:text-primary text-sm"
+                        disabled={isLoading}
+                      >
+                        Back to Sign In
+                      </button>
+                    </motion.div>
+                  </motion.form>
+                )}
+              </motion.div>
             ) : isSignUp ? (
               <motion.form
                 key="signup-form"

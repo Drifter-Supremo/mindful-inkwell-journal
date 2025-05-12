@@ -12,7 +12,7 @@
 - All sensitive AI API calls (DeepSeek) are handled server-side via Express backend
 - Vite proxy is used for seamless local development
 - Robust error handling on both frontend and backend
-- System prompt ensures non-rhyming, reflective poetry
+- System prompt ensures non-rhyming, reflective poetry with strict prohibition of dashes
 - Personalized poem presentation with Gorlea signature
 - Removed "AI-Generated Poem" label for a more personal experience
 
@@ -32,6 +32,8 @@
 - **Toast Placement:** Toast notifications are positioned in the top-right to avoid UI overlap.
 - **Content Limits:** Journal entries are limited to 3,000 characters with a visual character counter that turns red when approaching the limit. Voice recordings are limited to 1 minute with an animated countdown timer.
 - **UI Feedback:** The "Add Entry" button is disabled during voice recording to prevent conflicting actions.
+- **User Guidance:** Input fields throughout the app include example placeholders to guide users, especially in the Memories feature where users might need inspiration for what to share.
+- **Flexible Memory Storage:** Freeform memories are stored as a single entry without requiring specific formatting with blank lines, making the interface more intuitive for users.
 
 ## Design Patterns
 
@@ -45,14 +47,15 @@
 - **EntriesList.tsx:** Displays all journal entries for the authenticated user sorted by date (newest first), triggers new entry creation. Shows a clean, minimal "no journal entries yet" message when the user has no entries. The microphone button captures real voice entries, transcribes them using OpenAI, persists them to Firestore, and refreshes the list. Poems are displayed with a personal Gorlea signature. Smart date formatting shows relative time for recent entries and date format for older entries.
 - **NewEntryModal.tsx:** Handles text entry creation with validation and feedback.
 - **NewEntry.tsx:** Manages both text and voice input, integrates with AI for transcription and poetry. Includes a preview of how Gorlea will respond to journal entries.
+- **MemoriesModal.tsx:** Provides a tabbed interface for users to share personal details, important connections, and freeform memories with Gorlea. Features example placeholders in all input fields to guide users, and stores freeform memories as a single entry without requiring specific formatting.
 - **FilterDrawer.tsx:** Provides date-based filter options (Today, This Week, Last Month, Last Year) with green outlined active state, and a persistent "Log Out" button for authenticated users. All filter buttons (including "Clear Filter") close the drawer when clicked.
 - **UI Components:** Shared components (from shadcn/ui) provide consistent styling and behavior across the app.
 
 ## Integration Overview
 
-- **Firestore:** Stores entries, poems, timestamps, and user IDs. All queries are filtered by the authenticated user's `uid`. Voice entries are transcribed and saved identically to manual entries.
+- **Firestore:** Stores entries, poems, timestamps, and user IDs. All queries are filtered by the authenticated user's `uid`. Voice entries are transcribed and saved identically to manual entries. Also stores user memories in a separate collection for personalized poem generation.
 - **OpenAI:** Handles speech-to-text transcription for voice entries.
-- **DeepSeek:** Generates personalized poetry based on journal entries through a secure Express backend.
+- **DeepSeek:** Generates personalized poetry based on journal entries through a secure Express backend. Incorporates user memories from Firestore to create more personalized poems.
 - **RecordRTC:** Captures audio for voice entries.
 
 ## Environment & Data Patterns

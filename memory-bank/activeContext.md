@@ -12,6 +12,12 @@
 
 ## Recent Changes
 
+- Memories Feature Improvements:
+  - Added example placeholders to all input fields in the Memories modal
+  - Updated freeform memories to be stored as a single entry rather than requiring blank line separation
+  - Improved user experience with clearer visual cues about expected information
+  - Added detailed examples for personal questions, connections, and freeform memories
+
 - Authentication Flow Improvements:
   - Updated Vercel configuration to properly handle client-side routing with `{ "source": "/(.*)", "destination": "/" }`
   - Fixed Google sign-in popup 404 error by using the default Firebase auth domain
@@ -33,7 +39,8 @@
 - Fixed DeepSeek poetry generation by configuring Express server and Vite proxy correctly.
 - Personalized poem presentation by removing "AI-Generated Poem" label.
 - Added Gorlea signature to poems for a more personal touch.
-- Updated system prompts in both server.js and src/api/generate-poem.ts for consistency.
+- Updated system prompts in server.js, src/api/generate-poem.ts, and api/generate-poem.js to strongly emphasize never using dashes in poems.
+- Improved password reset UI to show a success message and return button after sending reset email.
 - Updated NewEntry.tsx to show a more personal poem preview.
 - Updated memory bank files to reflect all recent changes.
 - Marked Phase 6 (poem generation) tasks as complete in tasks.md.

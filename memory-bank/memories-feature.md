@@ -54,6 +54,10 @@ interface Memory {
 1. User clicks the "Memories" button in the drawer
 2. Modal opens with tabs for different types of memories
 3. User fills in details about themselves, important connections, and other memories
+   - Each input field has example text as placeholders to guide users (e.g., "Samurai Senny" for name preference)
+   - Personal questions have relevant examples like "The underdog that wins it all in the end"
+   - Connection fields have examples like "Luna" for name, "My cat" for relationship
+   - Freeform section has a detailed example to inspire users
 4. User saves their memories
 5. When the user creates a journal entry, Gorlea subtly incorporates these memories into the generated poem
 
@@ -63,6 +67,10 @@ interface Memory {
 2. **Privacy**: Memories are stored securely in Firestore with proper user scoping
 3. **Flexibility**: The system is designed to work even if no memories are provided
 4. **Natural Integration**: The AI is instructed to incorporate memories only when appropriate to the journal entry's content and tone
+5. **User-Friendly Input**:
+   - All input fields have example placeholders to guide users
+   - Freeform memories are stored as a single entry rather than requiring specific formatting with blank lines
+   - The UI provides clear visual cues about what information is expected
 
 ## Future Enhancements
 
