@@ -117,17 +117,17 @@ const EntriesList = ({ activeFilter }: EntriesListProps) => {
       toast.error("You must be signed in to save an entry.");
       return;
     }
+    const userId = user.uid;
     toast.loading("Gorlea is writing your poem...");
     let poem = "";
     try {
-      poem = await generatePoem(content); // Call generatePoem
+      poem = await generatePoem(content, userId); // Call generatePoem with userId
       toast.dismiss();
       toast.success("Poem generated!");
     } catch (err) {
       toast.dismiss();
       toast.error("Failed to generate poem. Saving entry without poem.");
     }
-    const userId = user.uid;
     await saveEntry(content, poem, userId);
     // Refresh entries from Firestore
     await refreshEntries();
@@ -490,17 +490,17 @@ const EntriesList = ({ activeFilter }: EntriesListProps) => {
                   toast.dismiss();
                   toast.success("Voice note transcribed!");
                   if (user) {
+                    const userId = user.uid;
                     toast.loading("Gorlea is writing your poem...");
                     let poem = "";
                     try {
-                      poem = await generatePoem(entryContent); // Call generatePoem
+                      poem = await generatePoem(entryContent, userId); // Call generatePoem with userId
                       toast.dismiss();
                       toast.success("Poem generated!");
                     } catch (err) {
                       toast.dismiss();
                       toast.error("Failed to generate poem. Saving entry without poem.");
                     }
-                    const userId = user.uid;
                     await saveEntry(entryContent, poem, userId);
                     toast.success("Entry saved successfully!");
                     await refreshEntries();

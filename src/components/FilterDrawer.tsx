@@ -15,12 +15,14 @@ import {
   Upload,
   User,
   Camera,
-  Database
+  Database,
+  Brain
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { drawerItemVariants, fadeInVariants } from "@/lib/animations";
 import { useState, useRef } from "react";
 import { toast } from "sonner";
+import MemoriesModal from "./MemoriesModal";
 
 type FilterDrawerProps = {
   open: boolean;
@@ -39,6 +41,7 @@ const FilterDrawer = ({ open, onOpenChange, activeFilter, setActiveFilter }: Fil
 
   const { user, userProfile, signOut, isSigningOut, uploadProfilePicture } = useAuth();
   const [isUploading, setIsUploading] = useState(false);
+  const [memoriesModalOpen, setMemoriesModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleLogout = async () => {
@@ -227,6 +230,30 @@ const FilterDrawer = ({ open, onOpenChange, activeFilter, setActiveFilter }: Fil
               </Button>
             </motion.div>
           ))}
+
+          {/* Memories Section */}
+          <motion.div
+            variants={drawerItemVariants}
+            custom={filters.length + 1}
+            initial="hidden"
+            animate="visible"
+            transition={{ delay: 0.1 * (filters.length + 1) }}
+          >
+            <div className="border-t border-primary/10 my-4 pt-4">
+              <h3 className="text-primary text-sm font-medium mb-2 px-2">Personalization</h3>
+            </div>
+            <Button
+              variant="ghost"
+              className="justify-start text-primary w-full"
+              onClick={() => {
+                setMemoriesModalOpen(true);
+                onOpenChange(false); // Close drawer when opening memories modal
+              }}
+            >
+              <Brain className="mr-2 h-4 w-4" />
+              Memories
+            </Button>
+          </motion.div>
         </motion.div>
 
         <motion.div
@@ -260,6 +287,12 @@ const FilterDrawer = ({ open, onOpenChange, activeFilter, setActiveFilter }: Fil
           </Button>
         </motion.div>
       </SheetContent>
+
+      {/* Memories Modal */}
+      <MemoriesModal
+        open={memoriesModalOpen}
+        onOpenChange={setMemoriesModalOpen}
+      />
     </Sheet>
   );
 };

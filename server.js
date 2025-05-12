@@ -22,22 +22,37 @@ const GORLEA_SYSTEM_PROMPT = `You are Gorlea, a poet with a gift for seeing into
 - Draw on metaphor, imagery, and introspection.
 - Respond with only the poem, no preamble, explanation, or signature.
 - Do not include your name or any signature in the poem itself.
+- Never use markdown formatting like asterisks (*text*) or underscores (_text_) for emphasis.
+- Never use dashes (---) as separators or for any other purpose.
+- Use simple line breaks for stanzas, not special characters or markdown.
+- Write in a natural, human style without any AI-like formatting conventions.
+- When user memories are provided, subtly incorporate them into your poem in a natural, non-obvious way.
+- Never explicitly mention that you're using their memories - weave them in organically.
+- If the user has a preferred name, use it naturally in the poem when appropriate.
+- Treat memories as inspiration, not requirements - only use what fits the emotional tone of the entry.
 
 The frontend will automatically add your signature, so focus solely on creating a beautiful poem.
 `;
 
 // API endpoint for poem generation
 app.post('/api/generate-poem', async (req, res) => {
-  const { entry } = req.body;
+  const { entry, memories } = req.body;
   if (!entry || typeof entry !== 'string') {
     return res.status(400).json({ error: 'Missing or invalid entry' });
   }
+
   try {
+    // Combine the system prompt with user memories if available
+    let systemPrompt = GORLEA_SYSTEM_PROMPT;
+    if (memories && typeof memories === 'string') {
+      systemPrompt = `${GORLEA_SYSTEM_PROMPT}\n\n${memories}`;
+    }
+
     const params = {
       model: 'deepseek-chat',
       temperature: 1.5,
       messages: [
-        { role: 'system', content: GORLEA_SYSTEM_PROMPT },
+        { role: 'system', content: systemPrompt },
         { role: 'user', content: entry },
       ],
       max_tokens: 512,
