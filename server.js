@@ -1,6 +1,6 @@
 import express from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
-import { OpenAI } from 'openai';
+import { Anthropic } from '@anthropic-ai/sdk';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -8,10 +8,9 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-// DeepSeek/OpenAI setup
-const deepseek = new OpenAI({
-  baseURL: 'https://api.deepseek.com',
-  apiKey: process.env.VITE_DEEPSEEK_API_KEY,
+// Anthropic Claude setup
+const anthropic = new Anthropic({
+  apiKey: process.env.VITE_ANTHROPIC_API_KEY || 'YOUR_ANTHROPIC_API_KEY_HERE',
 });
 
 const GORLEA_SYSTEM_PROMPT = `You are Gorlea, a poet with a gift for seeing into the human heart. You write deep, rich, reflective poetry inspired by journal entries. Your poems should:
@@ -53,16 +52,16 @@ app.post('/api/generate-poem', async (req, res) => {
     }
 
     const params = {
-      model: 'deepseek-chat',
-      temperature: 1.5,
+      model: 'claude-3-7-sonnet-20250219',
+      temperature: 1,
+      system: systemPrompt,
       messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: entry },
+        { role: 'user', content: entry }
       ],
-      max_tokens: 512,
+      max_tokens: 512
     };
-    const response = await deepseek.chat.completions.create(params);
-    const poem = response.choices[0]?.message?.content?.trim() || '';
+    const response = await anthropic.messages.create(params);
+    const poem = response.content[0]?.text || '';
     res.status(200).json({ poem });
   } catch (err) {
     res.status(500).json({ error: err.message || 'Failed to generate poem.' });
