@@ -335,18 +335,18 @@ const MemoriesModal = ({ open, onOpenChange }: MemoriesModalProps) => {
               </TabsContent>
             </Tabs>
 
-            <DialogFooter className="mt-6">
+            <DialogFooter className="mt-6 flex-col sm:flex-row gap-2 sm:gap-0">
               <Button
                 variant="outline"
                 onClick={() => onOpenChange(false)}
-                className="mr-2"
+                className="w-full sm:w-auto sm:mr-2 order-2 sm:order-1"
               >
                 Cancel
               </Button>
               <Button
                 onClick={saveMemories}
                 disabled={isSaving}
-                className="bg-primary text-primary-foreground hover:bg-primary/90"
+                className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 order-1 sm:order-2"
               >
                 {isSaving ? (
                   <>
