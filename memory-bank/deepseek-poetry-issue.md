@@ -1,6 +1,8 @@
 # Code Audit & Issue Report: Claude 3.7 Sonnet Poetry Generation & Firebase Integration
 
 > **Note:** This document has been updated to reflect the migration from DeepSeek to Claude 3.7 Sonnet for poetry generation.
+>
+> **Update (May 14, 2025):** The poetry generation issue has been resolved by migrating from DeepSeek to Claude 3.7 Sonnet. See the [claude-migration-and-ui-fixes.md](./claude-migration-and-ui-fixes.md) file for details on the implementation.
 
 ## 1. **Observed Issue**
 - **Error:** `Failed to load resource: the server responded with a status of 404 (Not Found)` for `api/generate-poem`.
