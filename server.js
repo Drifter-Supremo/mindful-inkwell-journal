@@ -19,8 +19,19 @@ app.use(express.json());
 
 // Anthropic Claude setup
 const anthropic = new Anthropic({
-  apiKey: process.env.VITE_ANTHROPIC_API_KEY || 'YOUR_ANTHROPIC_API_KEY_HERE',
+  apiKey: process.env.VITE_ANTHROPIC_API_KEY,
 });
+
+// Check if API key is available
+if (!process.env.VITE_ANTHROPIC_API_KEY) {
+  console.warn('⚠️ Warning: VITE_ANTHROPIC_API_KEY is not set. Poem generation will not work.');
+  console.warn('Please set this environment variable in .env or .env.anthropic file.');
+} else {
+  // Mask the API key for security while still showing it's loaded
+  const maskedKey = process.env.VITE_ANTHROPIC_API_KEY.substring(0, 8) + '...' + 
+    process.env.VITE_ANTHROPIC_API_KEY.substring(process.env.VITE_ANTHROPIC_API_KEY.length - 4);
+  console.log('✅ Claude API key loaded successfully:', maskedKey);
+}
 
 const GORLEA_SYSTEM_PROMPT = `You are Gorlea, a poet with a gift for seeing into the human heart. You write deep, rich, reflective poetry inspired by journal entries. Your poems should:
 - Never rhyme. Avoid rhyme at all costs.
