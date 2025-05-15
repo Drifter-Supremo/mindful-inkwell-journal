@@ -2,8 +2,17 @@ import express from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import { Anthropic } from '@anthropic-ai/sdk';
 import dotenv from 'dotenv';
+import fs from 'fs';
+import path from 'path';
 
+// Load regular .env file
 dotenv.config();
+
+// Load .env.anthropic if it exists
+const anthropicEnvPath = path.resolve(process.cwd(), '.env.anthropic');
+if (fs.existsSync(anthropicEnvPath)) {
+  dotenv.config({ path: anthropicEnvPath });
+}
 
 const app = express();
 app.use(express.json());
