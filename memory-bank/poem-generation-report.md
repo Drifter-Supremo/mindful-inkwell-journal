@@ -1,6 +1,8 @@
-# DeepSeek & Poem Generation Setup Report
+# Claude 3.7 Sonnet & Poem Generation Setup Report
 
-This report documents all files related to DeepSeek API integration and poem generation functionality to aid in replicating the local setup on Vercel.
+> **Note:** This document has been updated to reflect the migration from DeepSeek to Claude 3.7 Sonnet for poetry generation.
+
+This report documents all files related to Claude 3.7 Sonnet API integration and poem generation functionality to aid in replicating the local setup on Vercel.
 
 ## Table of Contents
 1. [Key Source Files](#key-source-files)
@@ -16,27 +18,27 @@ This report documents all files related to DeepSeek API integration and poem gen
 
 ### api/generate-poem.js (Full Content)
 ```javascript
-const OpenAI = require("openai");
+const { Anthropic } = require("@anthropic-ai/sdk");
 
 module.exports = async function handler(req, res) {
   try {
     const { entry } = req.body ?? {};
     if (!entry) return res.status(400).json({ error: "missing-entry" });
 
-    const openai = new OpenAI({
-      apiKey: process.env.DEEPSEEK_API_KEY, // use DeepSeek key
-      baseURL: "https://api.deepseek.com/v1"
+    const anthropic = new Anthropic({
+      apiKey: process.env.VITE_ANTHROPIC_API_KEY
     });
 
-    const completion = await openai.chat.completions.create({
-      model: "deepseek-chat",
+    const completion = await anthropic.messages.create({
+      model: "claude-3-7-sonnet-20250219",
+      system: "Write a short poem based on the user's journal entry.",
       messages: [
-        { role: "system", content: "Write a short poem based on the user's journal entry." },
         { role: "user", content: entry }
-      ]
+      ],
+      max_tokens: 512
     });
 
-    return res.status(200).json({ poem: completion.choices[0].message.content.trim() });
+    return res.status(200).json({ poem: completion.content[0].text.trim() });
   } catch (err) {
     console.error("Poem API error:", err);
     return res.status(500).json({ error: "poem-generation-failed" });
@@ -46,12 +48,11 @@ module.exports = async function handler(req, res) {
 
 ### src/api/generate-poem.ts (Full Content)
 ```typescript
-// Simple Vite serverless function for DeepSeek poem generation
-import OpenAI from 'openai';
+// Simple Vite serverless function for Claude 3.7 Sonnet poem generation
+import { Anthropic } from '@anthropic-ai/sdk';
 
-const deepseek = new OpenAI({
-  baseURL: 'https://api.deepseek.com',
-  apiKey: process.env.DEEPSEEK_API_KEY,
+const anthropic = new Anthropic({
+  apiKey: process.env.VITE_ANTHROPIC_API_KEY,
 });
 
 // The system prompt for Gorlea, our AI poet
@@ -79,16 +80,16 @@ export default async function handler(req: any, res: any) {
   }
   try {
     const params = {
-      model: 'deepseek-chat',
-      temperature: 1.5,
+      model: 'claude-3-7-sonnet-20250219',
+      temperature: 1,
+      system: GORLEA_SYSTEM_PROMPT,
       messages: [
-        { role: 'system', content: GORLEA_SYSTEM_PROMPT },
-        { role: 'user', content: entry },
-      ] as any,
+        { role: 'user', content: entry }
+      ],
       max_tokens: 512,
     };
-    const response = await deepseek.chat.completions.create(params);
-    const poem = response.choices[0]?.message?.content?.trim() || '';
+    const response = await anthropic.messages.create(params);
+    const poem = response.content[0]?.text || '';
     res.status(200).json({ poem });
   } catch (err: any) {
     res.status(500).json({ error: err.message || 'Failed to generate poem.' });
@@ -113,73 +114,70 @@ export async function generatePoem(entry: string) {
 
 ### server.js (Lines 1-30)
 ```javascript
-const express = require('express');
-const { createProxyMiddleware } = require('http-proxy-middleware');
-const OpenAI = require('openai');
-const dotenv = require('dotenv');
-const cors = require('cors');
-const path = require('path');
+import express from 'express';
+import { createProxyMiddleware } from 'http-proxy-middleware';
+import { Anthropic } from '@anthropic-ai/sdk';
+import dotenv from 'dotenv';
 
 // Load environment variables
 dotenv.config();
 
-// DeepSeek/OpenAI setup
-const deepseek = new OpenAI({
-  baseURL: 'https://api.deepseek.com',
-  apiKey: process.env.VITE_DEEPSEEK_API_KEY,
+// Anthropic Claude setup
+const anthropic = new Anthropic({
+  apiKey: process.env.VITE_ANTHROPIC_API_KEY,
 });
 
 // Gorlea system prompt
-const GORLEA_SYSTEM_PROMPT = `You are Gorlea, an AI poet with a reflective, thoughtful voice. 
-Create a short, evocative poem inspired by the journal entry.
-The poem should:
-- Be 4-8 lines long
-- Have a contemplative, introspective tone
-- Use vivid imagery related to the journal content
-- Not use rhyming patterns (free verse)
-- Capture the emotional essence of the entry
-- Be original and avoid clichés`;
+const GORLEA_SYSTEM_PROMPT = `You are Gorlea, a poet with a gift for seeing into the human heart. You write deep, rich, reflective poetry inspired by journal entries. Your poems should:
+- Never rhyme. Avoid rhyme at all costs.
+- Be thoughtful, emotionally resonant, and layered with meaning.
+- Adapt in length and style to the substance of the journal entry, whether short or long.
+- Avoid cliches, nursery rhyme patterns, or sing-song language.
+- Draw on metaphor, imagery, and introspection.
+- Respond with only the poem, no preamble, explanation, or signature.`;
 ```
 
 ### server.js (Lines 25-55, around generate-poem endpoint)
 ```javascript
-const GORLEA_SYSTEM_PROMPT = `You are Gorlea, an AI poet with a reflective, thoughtful voice. 
-Create a short, evocative poem inspired by the journal entry.
-The poem should:
-- Be 4-8 lines long
-- Have a contemplative, introspective tone
-- Use vivid imagery related to the journal content
-- Not use rhyming patterns (free verse)
-- Capture the emotional essence of the entry
-- Be original and avoid clichés`;
+const GORLEA_SYSTEM_PROMPT = `You are Gorlea, a poet with a gift for seeing into the human heart. You write deep, rich, reflective poetry inspired by journal entries. Your poems should:
+- Never rhyme. Avoid rhyme at all costs.
+- Be thoughtful, emotionally resonant, and layered with meaning.
+- Adapt in length and style to the substance of the journal entry, whether short or long.
+- Avoid cliches, nursery rhyme patterns, or sing-song language.
+- Draw on metaphor, imagery, and introspection.
+- Respond with only the poem, no preamble, explanation, or signature.`;
 
 const app = express();
 app.use(express.json());
-app.use(cors());
 
+// API endpoint for poem generation
 app.post('/api/generate-poem', async (req, res) => {
-  const { entry } = req.body;
+  const { entry, memories } = req.body;
   if (!entry || typeof entry !== 'string') {
     return res.status(400).json({ error: 'Missing or invalid entry' });
   }
+
   try {
+    // Combine the system prompt with user memories if available
+    let systemPrompt = GORLEA_SYSTEM_PROMPT;
+    if (memories && typeof memories === 'string') {
+      systemPrompt = `${GORLEA_SYSTEM_PROMPT}\n\n${memories}`;
+    }
+
     const params = {
-      model: 'deepseek-chat',
-      temperature: 1.5,
+      model: 'claude-3-7-sonnet-20250219',
+      temperature: 1,
+      system: systemPrompt,
       messages: [
-        { role: 'system', content: GORLEA_SYSTEM_PROMPT },
-        { role: 'user', content: entry },
+        { role: 'user', content: entry }
       ],
-      max_tokens: 512,
+      max_tokens: 512
     };
-    
-    const response = await deepseek.chat.completions.create(params);
-    const poem = response.choices[0]?.message?.content?.trim() || '';
-    
-    return res.status(200).json({ poem });
-  } catch (error) {
-    console.error('Failed to generate poem:', error);
-    return res.status(500).json({ error: 'Failed to generate poem' });
+    const response = await anthropic.messages.create(params);
+    const poem = response.content[0]?.text || '';
+    res.status(200).json({ poem });
+  } catch (err) {
+    res.status(500).json({ error: err.message || 'Failed to generate poem.' });
   }
 });
 ```

@@ -1,9 +1,11 @@
-# Code Audit & Issue Report: DeepSeek Poetry Generation & Firebase Integration
+# Code Audit & Issue Report: Claude 3.7 Sonnet Poetry Generation & Firebase Integration
+
+> **Note:** This document has been updated to reflect the migration from DeepSeek to Claude 3.7 Sonnet for poetry generation.
 
 ## 1. **Observed Issue**
 - **Error:** `Failed to load resource: the server responded with a status of 404 (Not Found)` for `api/generate-poem`.
 - **Context:** This occurs when attempting to generate poetry from a journal entry in the Mindful Inkwell app.
-- **Expected:** The frontend should be able to call an API endpoint (likely `/api/generate-poem`) to generate a poem using DeepSeek AI, and receive a result.
+- **Expected:** The frontend should be able to call an API endpoint (likely `/api/generate-poem`) to generate a poem using Claude 3.7 Sonnet AI, and receive a result.
 - **Actual:** The endpoint is not found (404), so poem generation fails.
 
 ## 2. **Current Setup Overview**
@@ -13,11 +15,11 @@
 - Calls `/api/generate-poem` expecting a backend API to handle poem generation requests.
 - Uses Firebase for authentication and Firestore for journal entry storage.
 
-### **Backend / DeepSeek API Integration**
+### **Backend / Claude 3.7 Sonnet API Integration**
 - An Express server (`server.js` in root) was intended to:
     - Provide a `/api/generate-poem` endpoint.
-    - Proxy requests from the frontend to DeepSeek's API using a secure server-side API key (from `.env`).
-    - Prevent the DeepSeek API key from being exposed to the frontend.
+    - Proxy requests from the frontend to Anthropic's Claude 3.7 Sonnet API using a secure server-side API key (from `.env`).
+    - Prevent the Anthropic API key from being exposed to the frontend.
 - The backend is **not being found** by the frontend at `/api/generate-poem`.
     - Possible reasons: backend not running, not listening on the right port, not correctly proxying requests, or frontend not configured to send requests to the correct server/port.
 
@@ -31,12 +33,12 @@
 - There may be a missing or misconfigured proxy (e.g., Vite config or Express not proxying requests as expected).
 - After git reset, backend setup may have been lost or reverted.
 
-## 4. **Summary of DeepSeek API & Firebase Setup**
+## 4. **Summary of Claude 3.7 Sonnet API & Firebase Setup**
 
-### **DeepSeek API**
+### **Claude 3.7 Sonnet API**
 - Intended to be called from the backend only (never expose API key to frontend).
 - API key stored in `.env` and loaded by Express backend.
-- Backend endpoint `/api/generate-poem` should accept journal text, call DeepSeek API, and return the generated poem.
+- Backend endpoint `/api/generate-poem` should accept journal text, call Claude 3.7 Sonnet API, and return the generated poem.
 
 ### **Firebase**
 - Handles user authentication and Firestore data storage.

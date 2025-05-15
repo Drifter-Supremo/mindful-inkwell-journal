@@ -22,7 +22,7 @@ The AI Journal is a React-based web application that allows users to create jour
 ### Backend
 - **Express**: Node.js web application framework for the API server
 - **Firebase**: Authentication and Firestore database for data storage
-- **DeepSeek AI**: AI service for generating poetry based on journal entries
+- **Anthropic Claude 3.7 Sonnet**: AI service for generating poetry based on journal entries
 - **OpenAI**: AI service for speech-to-text transcription
 
 ## Architecture
@@ -34,7 +34,7 @@ The AI Journal is a React-based web application that allows users to create jour
 
 ### Backend Services
 
-- **Express Server**: Runs on port 3001 and provides the `/api/generate-poem` endpoint for DeepSeek AI poem generation
+- **Express Server**: Runs on port 3001 and provides the `/api/generate-poem` endpoint for Claude 3.7 Sonnet AI poem generation
 - **Vite Dev Server**: Runs on port 8080 and serves the React frontend
 
 ### Key Components
@@ -83,8 +83,8 @@ Two main integration points for AI:
 
 2. **Poem Generation**:
    - When a journal entry is saved, the content is sent to the `/api/generate-poem` endpoint
-   - The Express server forwards the request to DeepSeek's API with the system prompt for Gorlea (the AI poet)
-   - DeepSeek generates a poem based on the journal entry
+   - The Express server forwards the request to Anthropic's Claude 3.7 Sonnet API with the system prompt for Gorlea (the AI poet)
+   - Claude 3.7 Sonnet generates a poem based on the journal entry
    - The poem is returned and displayed alongside the journal entry
 
 ### Data Persistence
@@ -178,8 +178,8 @@ VITE_FIREBASE_MEASUREMENT_ID=your_firebase_measurement_id
 # OpenAI API Key
 VITE_OPENAI_API_KEY=your_openai_api_key
 
-# DeepSeek API Key
-VITE_DEEPSEEK_API_KEY=your_deepseek_api_key
+# Anthropic API Key
+VITE_ANTHROPIC_API_KEY=your_anthropic_api_key
 ```
 
 Replace the placeholder values with your actual API keys.
