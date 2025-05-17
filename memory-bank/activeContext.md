@@ -18,6 +18,7 @@
   - Improved user experience with clearer visual cues about expected information
   - Added detailed examples for personal questions, connections, and freeform memories
 
+- Added "Created by Sencere Tucker" text to the bottom of the side panel
 - Authentication Flow Improvements:
   - Updated Vercel configuration to properly handle client-side routing with `{ "source": "/(.*)", "destination": "/" }`
   - Fixed Google sign-in popup 404 error by using the default Firebase auth domain

@@ -262,6 +262,9 @@ const FilterDrawer = ({ open, onOpenChange, activeFilter, setActiveFilter }: Fil
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.3 }}
         >
+          <p className="text-xs text-primary/60 text-center mb-2">
+            Created by Sencere Tucker
+          </p>
           <Button
             className="bg-destructive text-primary hover:bg-destructive/90 w-full"
             onClick={handleLogout}

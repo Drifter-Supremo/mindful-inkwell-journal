@@ -9,6 +9,7 @@
   - Added a clean, minimal "no journal entries yet" message when user has no entries
   - Improved login page with larger, more dynamic logo
   - Improved filter buttons with green outline for active state
+  - Added "Created by Sencere Tucker" text to the bottom of the side panel
   - Fixed filter drawer behavior to close when any filter button is clicked (including "Clear Filter")
   - Enhanced search functionality with improved mobile responsiveness:
     - Search bar now hides the logo on mobile when expanded to prevent overlap
